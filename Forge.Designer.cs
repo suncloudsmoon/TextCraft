@@ -65,7 +65,7 @@
             this.ForgeTab.Groups.Add(this.SettingsGroup);
             this.ForgeTab.Groups.Add(this.InfoGroup);
             this.ForgeTab.Groups.Add(this.OptionsGroup);
-            this.ForgeTab.Label = "Forge";
+            this.ForgeTab.Label = "Craft";
             this.ForgeTab.Name = "ForgeTab";
             // 
             // ToolsGroup
@@ -156,14 +156,14 @@
             this.ModelListDropDown.Name = "ModelListDropDown";
             this.ModelListDropDown.ShowLabel = false;
             this.ModelListDropDown.SizeString = "XXXXXXXXXXXXXXXXXXXXXXXXX";
-            this.ModelListDropDown.SuperTip = "Select a language model for use in Forge.";
+            this.ModelListDropDown.SuperTip = "Select a language model for use in TextCraft.";
             this.ModelListDropDown.SelectionChanged += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.ModelListDropDown_SelectionChanged);
             // 
             // DefaultCheckBox
             // 
             this.DefaultCheckBox.Label = "Default";
             this.DefaultCheckBox.Name = "DefaultCheckBox";
-            this.DefaultCheckBox.SuperTip = "Sets the default language model for use in Forge.";
+            this.DefaultCheckBox.SuperTip = "Sets the default language model for use in TextCraft.";
             this.DefaultCheckBox.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.DefaultCheckBox_Click);
             // 
             // InfoGroup

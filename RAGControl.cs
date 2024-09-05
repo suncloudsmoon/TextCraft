@@ -5,9 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.Word;
 using UglyToad.PdfPig;
-using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.Exceptions;
 using Task = System.Threading.Tasks.Task;
 using Word = Microsoft.Office.Interop.Word;
@@ -174,7 +172,7 @@ namespace TextForge
                             chunks.AddRange(SplitString(page.Text, chunkLen));
                         }
                     }
-                } catch (PdfDocumentEncryptedException ex)
+                } catch (PdfDocumentEncryptedException)
                 {
                     // Testing
                     PasswordPrompt p = new PasswordPrompt();

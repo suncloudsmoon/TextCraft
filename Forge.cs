@@ -19,28 +19,23 @@ namespace TextForge
     public partial class Forge
     {
         // Public
-        public static SystemChatMessage SystemPrompt { get { return _systemPrompt; } }
+        public static readonly SystemChatMessage SystemPrompt = new SystemChatMessage("You are an expert writing assistant and editor, specialized in enhancing the clarity, coherence, and impact of text within a document. You analyze text critically and provide constructive feedback to improve the overall quality.");
 
         // Private
-        private static readonly SystemChatMessage _systemPrompt = new SystemChatMessage("You are an expert writing assistant and editor, specialized in enhancing the clarity, coherence, and impact of text within a document. You analyze text critically and provide constructive feedback to improve the overall quality.");
-
-        private CustomTaskPane _generateTaskPane;
-        private CustomTaskPane _ragControlTaskPane;
-
         private AboutBox _box;
         private static RibbonGroup _optionsBox;
 
-        private Dictionary<string, string> buttonIdPairs = new Dictionary<string, string>();
+        private CustomTaskPane _generateTaskPane;
+        private CustomTaskPane _ragControlTaskPane;
 
         private void Forge_Load(object sender, RibbonUIEventArgs e)
         {
             try
             {
-                _generateTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(new GenerateUserControl(), this.GenerateButton.Label);
-                _ragControlTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(ThisAddIn.RagControl, this.RAGControlButton.Label);
+                if (!ThisAddIn.IsAddinInitialized)
+                    ThisAddIn.InitializeAddin();
 
-                ModelClient modelRetriever = new ModelClient(ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
-                List<string> models = GetModels(modelRetriever);
+                List<string> models = new List<string>(ThisAddIn.ModelList);
 
                 // Remove embedding models from the list
                 var copyList = new List<string>(models);
@@ -62,12 +57,17 @@ namespace TextForge
                     ModelListDropDown.Items.Add(newItem);
 
                     if (model == ThisAddIn.Model)
+                    {
                         ModelListDropDown.SelectedItem = newItem;
+                        UpdateCheckbox();
+                    }
                 }
-                UpdateCheckbox();
 
                 _box = new AboutBox();
                 _optionsBox = this.OptionsGroup;
+
+                _generateTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(new GenerateUserControl(), this.GenerateButton.Label);
+                _ragControlTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(ThisAddIn.RagControl, this.RAGControlButton.Label);
             } catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -310,7 +310,7 @@ namespace TextForge
             UserChatMessage userPrompt = new UserChatMessage($@"Document Content: ""{RAGControl.SubstringWithoutBounds(allText, (int)(ThisAddIn.ContextLength * 0.4))}""{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(p.Text, (int)(ThisAddIn.ContextLength * 0.3))}""{Environment.NewLine}Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringWithoutBounds(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
 
             ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
-            return client.CompleteChatStreamingAsync(new List<ChatMessage> { _systemPrompt, userPrompt }, null, ThisAddIn.CancellationTokenSource.Token);
+            return client.CompleteChatStreamingAsync(new List<ChatMessage> { SystemPrompt, userPrompt }, null, ThisAddIn.CancellationTokenSource.Token);
         }
     }
 }

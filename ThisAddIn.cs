@@ -25,6 +25,8 @@ namespace TextForge
         public static RAGControl RagControl { get { return _ragControl; } }
         public static CancellationTokenSource CancellationTokenSource { get { return _cancellationTokenSource; } set { _cancellationTokenSource = value; } }
         public static List<string> EmbedModels { get { return _embedModels; } }
+        public static bool IsAddinInitialized { get { return _isAddinInitialized; } set { _isAddinInitialized = value; } }
+        public static List<string> ModelList { get { return _modelList; } }
 
         // Private
         private static string _openAIEndpoint = "http://localhost:11434/";
@@ -36,6 +38,8 @@ namespace TextForge
         private static EmbedderOpenAI _embedder;
         private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private static RAGControl _ragControl;
+        private static bool _isAddinInitialized = false;
+        private static List<string> _modelList;
 
         private int _prevNumComments = 0;
         private bool _isDraftingComment = false;
@@ -107,11 +111,9 @@ namespace TextForge
         {
             try
             {
-                InitializeEnvironmentVariables();
-                _embedder = new EmbedderOpenAI(_embedModel, _apiKey, _clientOptions);
-                _ragControl = new RAGControl();
-
                 this.Application.WindowSelectionChange += new Word.ApplicationEvents4_WindowSelectionChangeEventHandler(Document_CommentsEventHandler);
+                if (!_isAddinInitialized)
+                    InitializeAddin();
             }
             catch (Exception ex)
             {
@@ -119,10 +121,17 @@ namespace TextForge
             }
         }
 
-
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
             Properties.Settings.Default.Save();
+        }
+
+        public static void InitializeAddin()
+        {
+            InitializeEnvironmentVariables();
+            _embedder = new EmbedderOpenAI(_embedModel, _apiKey, _clientOptions);
+            _ragControl = new RAGControl();
+            _isAddinInitialized = true;
         }
 
         private async void Document_CommentsEventHandler(Word.Selection selection)
@@ -156,10 +165,10 @@ namespace TextForge
                         chatHistory.Add(new UserChatMessage($@"Document Content: ""{RAGControl.SubstringWithoutBounds(documentText, (int)(_contextLength * 0.4))}""{Environment.NewLine}Rag Context: {_ragControl.GetRAGContext(c.Range.Text, (int)(ContextLength * 0.2))}Please review the following paragraph extracted from the Document: ""{c.Range.Text}""{Environment.NewLine}Based on the previous AI comments, suggest additional specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document."));
                         chatHistory.Add(new AssistantChatMessage(c.Range.Text));
 
-                        for (int i = 0; i < c.Replies.Count; i++)
+                        for (int i = 1; i <= c.Replies.Count; i++)
                         {
                             Comment reply = c.Replies[i];
-                            chatHistory.Add((i % 2 == 0) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
+                            chatHistory.Add((i % 2 == 1) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
                         }
 
                         ChatClient client = new ChatClient(Model, ApiKey, ClientOptions);
@@ -176,9 +185,9 @@ namespace TextForge
 
         private static void InitializeEnvironmentVariables()
         {
-            SetEnvironmentVariableIfAvailable(ref _openAIEndpoint, "TEXTFORGE_OPENAI_ENDPOINT");
-            SetEnvironmentVariableIfAvailable(ref _apiKey, "TEXTFORGE_API_KEY");
-            SetEnvironmentVariableIfAvailable(ref _embedModel, "TEXTFORGE_EMBED_MODEL");
+            GetEnvironmentVariableIfAvailable(ref _openAIEndpoint, "TEXTFORGE_OPENAI_ENDPOINT");
+            GetEnvironmentVariableIfAvailable(ref _apiKey, "TEXTFORGE_API_KEY");
+            GetEnvironmentVariableIfAvailable(ref _embedModel, "TEXTFORGE_EMBED_MODEL");
 
             // Initialize client variables
             _clientOptions = new OpenAIClientOptions
@@ -188,12 +197,15 @@ namespace TextForge
                 ApplicationId = "TextForge"
             };
             ModelClient modelRetriever = new ModelClient(_apiKey, _clientOptions);
-            var modelList = Forge.GetModels(modelRetriever);
+            _modelList = Forge.GetModels(modelRetriever); // caching the response
+
+            string defaultModel = Properties.Settings.Default.DefaultModel;
+            _model = _modelList.Contains(defaultModel) ? defaultModel : modelRetriever.GetModels().Value[0].Id;
 
             // Set embed model
             if (string.IsNullOrEmpty(_embedModel))
             {
-                foreach (var model in modelList)
+                foreach (var model in _modelList)
                 {
                     if (model.Contains("embed"))
                     {
@@ -207,13 +219,12 @@ namespace TextForge
                             break;
                         }
                 }
+                if (string.IsNullOrEmpty(_embedModel))
+                    throw new ArgumentException("Embed model is not installed on the computer!");
             }
-
-            string defaultModel = Properties.Settings.Default.DefaultModel;
-            _model = modelList.Contains(defaultModel) ? defaultModel : modelRetriever.GetModels().Value[0].Id;
         }
 
-        private static void SetEnvironmentVariableIfAvailable(ref string dest, string variable)
+        private static void GetEnvironmentVariableIfAvailable(ref string dest, string variable)
         {
             var key = Environment.GetEnvironmentVariable(variable);
             if (key != null)

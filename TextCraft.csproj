@@ -26,7 +26,7 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <RootNamespace>TextForge</RootNamespace>
-    <AssemblyName>TextForge</AssemblyName>
+    <AssemblyName>TextCraft</AssemblyName>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <DefineConstants>VSTO40;UseOfficeInterop</DefineConstants>
     <ResolveComReferenceSilent>true</ResolveComReferenceSilent>
@@ -44,11 +44,11 @@
     <UpdateEnabled>false</UpdateEnabled>
     <UpdateInterval>0</UpdateInterval>
     <UpdateIntervalUnits>days</UpdateIntervalUnits>
-    <ProductName>TextForge</ProductName>
+    <ProductName>TextCraft</ProductName>
     <PublisherName />
-    <SupportUrl />
-    <FriendlyName>TextForge</FriendlyName>
-    <OfficeApplicationDescription />
+    <SupportUrl>https://github.com/suncloudsmoon/TextForge</SupportUrl>
+    <FriendlyName>TextCraft</FriendlyName>
+    <OfficeApplicationDescription>Integrates AI tools into Microsoft® Word® %28independently developed, not affiliated with Microsoft%29</OfficeApplicationDescription>
     <LoadBehavior>3</LoadBehavior>
   </PropertyGroup>
   <ItemGroup>
@@ -368,7 +368,7 @@
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="TextForge_TemporaryKey.pfx" />
+    <None Include="TextCraft_TemporaryKey.pfx" />
     <None Include="ThisAddIn.Designer.xml">
       <DependentUpon>ThisAddIn.cs</DependentUpon>
     </None>
@@ -394,6 +394,8 @@
     <None Include="Resources\counterclockwise_arrows_button_high_contrast.png" />
     <None Include="Resources\memo_high_contrast.png" />
     <None Include="Resources\clipboard_high_contrast.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="robot_color.ico" />
   </ItemGroup>
   <PropertyGroup>
@@ -421,8 +423,8 @@
     <VisualStudio>
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
         <ProjectProperties HostName="Word" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Word" Language="cs" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Word\InstallRoot\Path#WINWORD.EXE" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{51063C3A-E220-4D12-8922-BDA915ACD783}" />
-        <Host Name="Word" GeneratedCodeNamespace="TextForge" IconIndex="0">
-          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
+        <Host Name="Word" GeneratedCodeNamespace="TextForge" PublishedHash="69C324AB27932AA2FBF2B7EA72250886FF164DE6" IconIndex="0">
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" PublishedHash="33BEF49A912735C18EDDC99134858557C7530EF3" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
         </Host>
       </FlavorProperties>
     </VisualStudio>

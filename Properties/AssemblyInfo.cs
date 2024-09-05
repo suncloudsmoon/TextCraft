@@ -6,11 +6,11 @@ using System.Security;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("TextForge")]
+[assembly: AssemblyTitle("TextCraft")]
 [assembly: AssemblyDescription("Integrates Artificial Intelligence (AI) into Microsoft®️ Word®️.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("TextForge")]
+[assembly: AssemblyCompany("suncloudsmoon")]
+[assembly: AssemblyProduct("TextCraft")]
 [assembly: AssemblyCopyright("Copyright © 2024 suncloudsmoon")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
