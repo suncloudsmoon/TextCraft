@@ -22,6 +22,12 @@
         "Entry"
         {
         "MsmKey" = "8:_04488508DC1347F1B40C3D060AE56275"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_04488508DC1347F1B40C3D060AE56275"
         "OwnerKey" = "8:_BBA4CC2167D94EAC6B71EF8A91F4B428"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -35,6 +41,12 @@
         {
         "MsmKey" = "8:_05573A420974C74F13859D9FEAC884B3"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_05573A420974C74F13859D9FEAC884B3"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -143,6 +155,12 @@
         {
         "MsmKey" = "8:_1B492A5A6CF2F8516B043E501A270AC4"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1B492A5A6CF2F8516B043E501A270AC4"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -286,6 +304,12 @@
         "Entry"
         {
         "MsmKey" = "8:_47419264F8E9C7478516E89FBAB483C3"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_47419264F8E9C7478516E89FBAB483C3"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -371,6 +395,12 @@
         {
         "MsmKey" = "8:_59172729E9CD8473F77718EDA2626541"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_59172729E9CD8473F77718EDA2626541"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -484,6 +514,12 @@
         "Entry"
         {
         "MsmKey" = "8:_AA5FC445456EB8400DD5AE895228A445"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AA5FC445456EB8400DD5AE895228A445"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -525,8 +561,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BBA4CC2167D94EAC6B71EF8A91F4B428"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BC3C99FDAF63C7C8888DD4CBCDA91900"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BC3C99FDAF63C7C8888DD4CBCDA91900"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -550,12 +598,6 @@
         "Entry"
         {
         "MsmKey" = "8:_BDE9EA79BA6F41B6BE32850E424215EA"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BE43B85B30E048398CF7A3E5F3C1B96E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -621,8 +663,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D6DCC622A4634ECBD4733DB016770C60"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DCD6C15A029918EB268BB6448133AACF"
         "OwnerKey" = "8:_59172729E9CD8473F77718EDA2626541"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DCD6C15A029918EB268BB6448133AACF"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -664,6 +718,12 @@
         "Entry"
         {
         "MsmKey" = "8:_E2F499B4A94AE9973A2FD75140AE2EFD"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E2F499B4A94AE9973A2FD75140AE2EFD"
         "OwnerKey" = "8:_4CCBCB085EBA97FCA37BB56934AB0D71"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -699,8 +759,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_FC0B70EA8C384379DE6F635A416EE180"
         "OwnerKey" = "8:_DCD6C15A029918EB268BB6448133AACF"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FC0B70EA8C384379DE6F635A416EE180"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -719,6 +791,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_5DA1C96D6C89410AA5F3D85C50EA4EE0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F9A7ECC301AF48508BBD2470A34EB6BF"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1965,26 +2043,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BE43B85B30E048398CF7A3E5F3C1B96E"
-            {
-            "SourcePath" = "8:..\\bin\\Release\\TextCraft.vsto"
-            "TargetName" = "8:TextCraft.vsto"
-            "Tag" = "8:"
-            "Folder" = "8:_AF016B7856C74F08A06EC9F3AA46C574"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C2F42BA801692489F910DED594B693EE"
             {
             "AssemblyRegister" = "3:1"
@@ -2295,6 +2353,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F9A7ECC301AF48508BBD2470A34EB6BF"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:TextCraft, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F9A7ECC301AF48508BBD2470A34EB6BF"
+                    {
+                    "Name" = "8:TextCraft.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\bin\\Release\\TextCraft.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_AF016B7856C74F08A06EC9F3AA46C574"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FC0B70EA8C384379DE6F635A416EE180"
             {
             "AssemblyRegister" = "3:1"
@@ -2345,7 +2434,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_AF016B7856C74F08A06EC9F3AA46C574"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -2406,7 +2495,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TextCraft"
         "ProductCode" = "8:{9A35238E-CCC7-4433-9616-E5DC353A48D3}"
-        "PackageCode" = "8:{863A915E-8A6F-4EC1-BBCC-4CAB091463A1}"
+        "PackageCode" = "8:{CA02E8D0-7BD9-43E4-AE33-147843531246}"
         "UpgradeCode" = "8:{E36CBC33-F0C8-472A-99B5-D882A25CC883}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -2427,7 +2516,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -2537,7 +2626,7 @@
                                                         {
                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_B5EA635FB1CE4CE2B01D31670DD9D3E8"
                                                             {
-                                                            "Name" = "8:TextCraft.WordAddIn"
+                                                            "Name" = "8:TextForge.WordAddIn"
                                                             "Condition" = "8:"
                                                             "AlwaysCreate" = "11:FALSE"
                                                             "DeleteAtUninstall" = "11:TRUE"
