@@ -115,13 +115,14 @@ namespace TextForge
             try
             {
                 fileContent = await ReadPdfFileAsync(filePath, CHUNK_LEN);
-            } finally
+            } catch
             {
                 this.Invoke((MethodInvoker)delegate
                 {
                     _fileList.Remove(filePath);
                     AutoHideRemoveButton();
                 });
+                throw;
             }
             _db.CreateIndex(filePath);
 
