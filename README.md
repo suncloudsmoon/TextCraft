@@ -8,6 +8,7 @@ https://github.com/user-attachments/assets/0e37b253-3f95-4ff2-ab3f-eba480df4c61
 # Prerequisities
 To install this application, ensure your system meets the following requirements:
 1. Windows 10 version 22H2 or later (32/64 bit)
+2. Microsoft®️ Office®️ 2010 or later
 
 # Install
 To install TextCraft™, the Office® Add-In with integrated AI tools, follow these steps:
