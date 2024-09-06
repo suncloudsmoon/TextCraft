@@ -12,7 +12,7 @@ using System.Security;
 [assembly: AssemblyCompany("suncloudsmoon")]
 [assembly: AssemblyProduct("TextCraft")]
 [assembly: AssemblyCopyright("Copyright © 2024 suncloudsmoon")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("TextCraft™️")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
