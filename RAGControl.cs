@@ -22,7 +22,7 @@ namespace TextForge
         private HyperVectorDB.HyperVectorDB _db;
         private bool _isIndexing;
 
-        public const int CHUNK_LEN = 256;
+        public static readonly int CHUNK_LEN = TokensToCharCount(256);
 
         public RAGControl()
         {
@@ -209,9 +209,19 @@ namespace TextForge
             return result;
         }
 
-        public static string SubstringWithoutBounds(string text, int maxLen)
+        public static string SubstringTokens(string text, int maxTokens)
+        {
+            return SubstringWithoutBounds(text, TokensToCharCount(maxTokens));
+        }
+
+        private static string SubstringWithoutBounds(string text, int maxLen)
         {
             return (maxLen >= text.Length) ? text : text.Substring(0, maxLen);
+        }
+
+        public static int TokensToCharCount(int tokenCount)
+        {
+            return tokenCount * 4; // https://platform.openai.com/tokenizer
         }
 
         public static string GetWordDocumentAsRAG(string query, Word.Range context)

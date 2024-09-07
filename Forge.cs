@@ -307,7 +307,7 @@ namespace TextForge
                     ragContext.AppendLine(doc.DocumentString);
                 allText = ragContext.ToString();
             }
-            UserChatMessage userPrompt = new UserChatMessage($@"Document Content: ""{RAGControl.SubstringWithoutBounds(allText, (int)(ThisAddIn.ContextLength * 0.4))}""{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(p.Text, (int)(ThisAddIn.ContextLength * 0.3))}""{Environment.NewLine}Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringWithoutBounds(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
+            UserChatMessage userPrompt = new UserChatMessage($@"Document Content: ""{RAGControl.SubstringTokens(allText, (int)(ThisAddIn.ContextLength * 0.4))}""{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(p.Text, (int)(ThisAddIn.ContextLength * 0.3))}""{Environment.NewLine}Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
 
             ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
             return client.CompleteChatStreamingAsync(new List<ChatMessage> { SystemPrompt, userPrompt }, null, ThisAddIn.CancellationTokenSource.Token);

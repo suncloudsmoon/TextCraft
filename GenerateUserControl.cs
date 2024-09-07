@@ -67,8 +67,8 @@ namespace TextForge
             string document = (Globals.ThisAddIn.Application.ActiveDocument.Words.Count * 1.4 > ThisAddIn.ContextLength * 0.4) ? RAGControl.GetWordDocumentAsRAG(prompt, context) : context.Text;
 
             // 0.1 of context length leftover to account for UserChatMessage and other stuff
-            SystemChatMessage systemPromptBounded = new SystemChatMessage(RAGControl.SubstringWithoutBounds(systemPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * 0.1)));
-            UserChatMessage fullPrompt = new UserChatMessage($@"{RAGControl.SubstringWithoutBounds(prompt, (int) (ThisAddIn.ContextLength * 0.2))}{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(prompt, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}Document Content: ""{RAGControl.SubstringWithoutBounds(document, (int)(ThisAddIn.ContextLength * 0.4))}""");
+            SystemChatMessage systemPromptBounded = new SystemChatMessage(RAGControl.SubstringTokens(systemPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * 0.1)));
+            UserChatMessage fullPrompt = new UserChatMessage($@"{RAGControl.SubstringTokens(prompt, (int) (ThisAddIn.ContextLength * 0.2))}{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(prompt, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}Document Content: ""{RAGControl.SubstringTokens(document, (int)(ThisAddIn.ContextLength * 0.4))}""");
             
             ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
             return client.CompleteChatStreamingAsync(new List<ChatMessage>() { systemPromptBounded, fullPrompt }, null, ThisAddIn.CancellationTokenSource.Token);
