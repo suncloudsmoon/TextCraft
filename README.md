@@ -18,8 +18,8 @@ To install TextCraft™, the Office® Add-In with integrated AI tools, follow th
 4. **Pull** an embedding model of your choice, for example:
    - `ollama pull all-minilm`
 6. **Download the appropriate setup file:**
-    - For a 32-bit system, download [`TextCraft_x32.zip`](https://github.com/suncloudsmoon/TextCraft/releases/download/v1.0.0/TextCraft_x32.zip).
-    - For a 64-bit system, download [`TextCraft_x64.zip`](https://github.com/suncloudsmoon/TextCraft/releases/download/v1.0.0/TextCraft_x64.zip).
+    - For a 32-bit system, download [`TextCraft_x32.zip`](https://github.com/suncloudsmoon/TextCraft/releases/download/v1.0.1/TextCraft_x32.zip).
+    - For a 64-bit system, download [`TextCraft_x64.zip`](https://github.com/suncloudsmoon/TextCraft/releases/download/v1.0.1/TextCraft_x64.zip).
 7. **Extract the contents** of the downloaded zip file to a folder of your choice.
 8. **Run** `setup.exe`: This will install any required dependencies for TextCraft™, including .NET Framework® 4.8.1 and Visual Studio® 2010 Tools for Office Runtime.
 9. **Run** `OfficeAddInSetup.msi` to install TextCraft™.
