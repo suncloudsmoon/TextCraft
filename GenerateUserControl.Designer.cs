@@ -42,6 +42,7 @@
             this.PromptTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.PromptTextBox.Size = new System.Drawing.Size(297, 328);
             this.PromptTextBox.TabIndex = 0;
+            this.PromptTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PromptTextBox_KeyDown);
             // 
             // GenerateButton
             // 

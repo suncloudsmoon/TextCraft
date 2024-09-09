@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ClientModel;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,7 +9,6 @@ using System.Windows.Forms;
 using Microsoft.Office.Tools;
 using Microsoft.Office.Tools.Ribbon;
 using OpenAI.Chat;
-using OpenAI.Models;
 using Task = System.Threading.Tasks.Task;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -90,6 +88,7 @@ namespace TextForge
             try
             {
                 ThisAddIn.Model = ModelListDropDown.SelectedItem.Label;
+                ThisAddIn.ContextLength = RAGControl.GetContextLength(ThisAddIn.Model);
                 UpdateCheckbox();
             }
             catch (Exception ex)
@@ -178,19 +177,27 @@ namespace TextForge
         private static async Task ReviewButton_Click()
         {
             Word.Paragraphs paragraphs = Globals.ThisAddIn.Application.ActiveDocument.Paragraphs;
-
             const string prompt = "As an expert writing assistant, suggest specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document.";
+
+            bool hasCommented = false; 
             if (Globals.ThisAddIn.Application.Selection.End - Globals.ThisAddIn.Application.Selection.Start > 0)
             {
                 await AddComment(Globals.ThisAddIn.Application.ActiveDocument.Comments, Globals.ThisAddIn.Application.Selection.Range, Review(paragraphs, Globals.ThisAddIn.Application.Selection.Range, prompt));
+                hasCommented = true;
             }
             else
             {
                 foreach (Word.Paragraph p in paragraphs)
                     // It isn't a paragraph if it doesn't contain a full stop.
                     if (p.Range.Text.Contains('.'))
+                    {
                         await AddComment(Globals.ThisAddIn.Application.ActiveDocument.Comments, p.Range, Review(paragraphs, p.Range, prompt));
+                        hasCommented = true;
+                    }
+
             }
+            if (!hasCommented)
+                MessageBox.Show("Review complete!", "Action Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private static async Task ProofreadButton_Click()
@@ -215,7 +222,11 @@ namespace TextForge
             var range = (selectionRange.End - selectionRange.Start > 0) ? selectionRange : throw new InvalidRangeException("No text is selected for analysis!");
             
             ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
-            var streamingAnswer = client.CompleteChatStreamingAsync(new SystemChatMessage(systemPrompt), new UserChatMessage(@$"{userPrompt}: {range.Text}"));
+            var streamingAnswer = client.CompleteChatStreamingAsync(
+                new List<ChatMessage>() { new SystemChatMessage(systemPrompt), new UserChatMessage(@$"{userPrompt}: {range.Text}") },
+                new ChatCompletionOptions() { MaxTokens = ThisAddIn.ContextLength },
+                ThisAddIn.CancellationTokenSource.Token
+            );
             range.Delete();
             await AddStreamingContentToRange(streamingAnswer, range);
             Globals.ThisAddIn.Application.Selection.SetRange(range.Start, range.End);
@@ -250,14 +261,6 @@ namespace TextForge
             DefaultCheckBox.Checked = (Properties.Settings.Default.DefaultModel == ThisAddIn.Model);
         }
 
-        public static List<string> GetModels(ModelClient model)
-        {
-            List<string> models = new List<string>();
-            foreach (OpenAIModelInfo info in model.GetModels().Value)
-                models.Add(info.Id);
-            return models;
-        }
-
         public static async Task AddComment(Word.Comments comments, Word.Range range, AsyncCollectionResult<StreamingChatCompletionUpdate> streamingContent)
         {
             Word.Comment c = comments.Add(range, string.Empty);
@@ -286,31 +289,9 @@ namespace TextForge
 
         private static AsyncCollectionResult<StreamingChatCompletionUpdate> Review(Word.Paragraphs context, Word.Range p, string prompt)
         {
-            const int promptWordLen = 50;
             var docRange = Globals.ThisAddIn.Application.ActiveDocument.Range();
-            int documentLength = (int)(docRange.Words.Count * 1.3);
-            string allText = docRange.Text;
-
-            if (ThisAddIn.ContextLength - documentLength - p.Words.Count - promptWordLen - (int)(ThisAddIn.ContextLength * 0.3) < 0)
-            {
-                HyperVectorDB.HyperVectorDB DB = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
-                foreach (Word.Paragraph paragraph in context)
-                {
-                    if (paragraph.Range == p) continue;
-                    var chunks = RAGControl.SplitString(paragraph.Range.Text, RAGControl.CHUNK_LEN);
-                    foreach (var chunk in chunks)
-                        DB.IndexDocument(chunk);
-                }
-                var result = DB.QueryCosineSimilarity(p.Text, 3);
-                StringBuilder ragContext = new StringBuilder();
-                foreach (var doc in result.Documents)
-                    ragContext.AppendLine(doc.DocumentString);
-                allText = ragContext.ToString();
-            }
-            UserChatMessage userPrompt = new UserChatMessage($@"Document Content: ""{RAGControl.SubstringTokens(allText, (int)(ThisAddIn.ContextLength * 0.4))}""{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(p.Text, (int)(ThisAddIn.ContextLength * 0.3))}""{Environment.NewLine}Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
-
-            ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
-            return client.CompleteChatStreamingAsync(new List<ChatMessage> { SystemPrompt, userPrompt }, null, ThisAddIn.CancellationTokenSource.Token);
+            UserChatMessage commentPrompt = new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
+            return RAGControl.AskQuestion(SystemPrompt, new List<UserChatMessage> { commentPrompt }, docRange);
         }
     }
 }

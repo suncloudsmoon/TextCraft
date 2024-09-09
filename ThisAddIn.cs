@@ -15,11 +15,12 @@ namespace TextForge
     public partial class ThisAddIn
     {
         // Public
+        public const int BaselineContextWindowLength = 4096;
         public static string OpenAIEndpoint { get { return _openAIEndpoint; } }
         public static string ApiKey { get { return _apiKey; } }
         public static string Model { get { return _model; } set { _model = value; } }
         public static string EmbedModel { get { return _embedModel; } }
-        public static int ContextLength { get { return _contextLength; } }
+        public static int ContextLength { get { return _contextLength; } set { _contextLength = value; } }
         public static OpenAIClientOptions ClientOptions { get { return _clientOptions; } }
         public static EmbedderOpenAI Embedder { get { return _embedder; } }
         public static RAGControl RagControl { get { return _ragControl; } }
@@ -29,11 +30,11 @@ namespace TextForge
         public static List<string> ModelList { get { return _modelList; } }
 
         // Private
-        private static string _openAIEndpoint = "http://localhost:11434/";
+        private static string _openAIEndpoint = "http://localhost:11434/v1";
         private static string _apiKey = "dummy_key";
         private static string _model = "gpt-4o";
         private static string _embedModel = string.Empty;
-        private static int _contextLength = 4096; // Changed from 32768
+        private static int _contextLength = BaselineContextWindowLength;
         private static OpenAIClientOptions _clientOptions;
         private static EmbedderOpenAI _embedder;
         private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
@@ -141,15 +142,11 @@ namespace TextForge
             if (numComments != _prevNumComments)
             {
                 Comments comments = this.Application.ActiveDocument.Comments;
-                List<Word.Comment> topLevelAIComments = new List<Word.Comment>();
-
+                
+                List<Comment> topLevelAIComments = new List<Comment>();
                 foreach (Comment c in comments)
-                {
                     if (c.Ancestor == null && c.Author == _model)
-                    {
                         topLevelAIComments.Add(c);
-                    }
-                }
 
                 foreach (Comment c in topLevelAIComments)
                 {
@@ -159,21 +156,19 @@ namespace TextForge
                         _isDraftingComment = true;
 
                         List<ChatMessage> chatHistory = new List<ChatMessage>();
-                        chatHistory.Add(Forge.SystemPrompt);
-
-                        string documentText = (this.Application.ActiveDocument.Words.Count * 1.2 > _contextLength * 0.4) ? RAGControl.GetWordDocumentAsRAG(c.Range.Text, this.Application.ActiveDocument.Range()) : this.Application.ActiveDocument.Range().Text;
-                        chatHistory.Add(new UserChatMessage($@"Document Content: ""{RAGControl.SubstringTokens(documentText, (int)(_contextLength * 0.4))}""{Environment.NewLine}Rag Context: {_ragControl.GetRAGContext(c.Range.Text, (int)(ContextLength * 0.2))}Please review the following paragraph extracted from the Document: ""{c.Range.Text}""{Environment.NewLine}Based on the previous AI comments, suggest additional specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document."));
-                        chatHistory.Add(new AssistantChatMessage(c.Range.Text));
-
+                        chatHistory.Add(new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{c.Range.Text}"""));
+                        chatHistory.Add(new UserChatMessage($@"Based on the previous AI comments, suggest additional specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document."));
                         for (int i = 1; i <= c.Replies.Count; i++)
                         {
                             Comment reply = c.Replies[i];
                             chatHistory.Add((i % 2 == 1) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
                         }
 
-                        ChatClient client = new ChatClient(Model, ApiKey, ClientOptions);
-                        var streamingCompletion = client.CompleteChatStreamingAsync(chatHistory, null, _cancellationTokenSource.Token);
-                        await Forge.AddComment(c.Replies, c.Range, streamingCompletion);
+                        await Forge.AddComment(
+                            c.Replies,
+                            c.Range,
+                            RAGControl.AskQuestion(Forge.SystemPrompt, chatHistory, this.Application.ActiveDocument.Range())
+                        );
                         numComments++;
 
                         _isDraftingComment = false;
@@ -197,10 +192,11 @@ namespace TextForge
                 ApplicationId = "TextForge"
             };
             ModelClient modelRetriever = new ModelClient(_apiKey, _clientOptions);
-            _modelList = Forge.GetModels(modelRetriever); // caching the response
+            _modelList = GetModels(modelRetriever); // caching the response
 
             string defaultModel = Properties.Settings.Default.DefaultModel;
             _model = _modelList.Contains(defaultModel) ? defaultModel : modelRetriever.GetModels().Value[0].Id;
+            _contextLength = RAGControl.GetContextLength(_model);
 
             // Set embed model
             if (string.IsNullOrEmpty(_embedModel))
@@ -212,7 +208,7 @@ namespace TextForge
                         _embedModel = model;
                         break;
                     }
-                    foreach (var item in ThisAddIn.EmbedModels)
+                    foreach (var item in _embedModels)
                         if (model.Contains(item))
                         {
                             _embedModel = model;
@@ -222,6 +218,7 @@ namespace TextForge
                 if (string.IsNullOrEmpty(_embedModel))
                     throw new ArgumentException("Embed model is not installed on the computer!");
             }
+
         }
 
         private static void GetEnvironmentVariableIfAvailable(ref string dest, string variable)
@@ -229,6 +226,13 @@ namespace TextForge
             var key = Environment.GetEnvironmentVariable(variable);
             if (key != null)
                 dest = key;
+        }
+        private static List<string> GetModels(ModelClient model)
+        {
+            List<string> models = new List<string>();
+            foreach (OpenAIModelInfo info in model.GetModels().Value)
+                models.Add(info.Id);
+            return models;
         }
 
 

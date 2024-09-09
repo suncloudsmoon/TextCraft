@@ -1,14 +1,7 @@
 ﻿using System;
-using System.ClientModel;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HyperVectorDB.Embedder;
 using OpenAI.Chat;
-using Word = Microsoft.Office.Interop.Word;
 
 namespace TextForge
 {
@@ -39,7 +32,12 @@ namespace TextForge
                  * Then, it won't affect where the text is placed.
                  */
                 var rangeBeforeChat = Globals.ThisAddIn.Application.Selection.Range;
-                var streamingAnswer = AskQuestion(_systemPrompt, Globals.ThisAddIn.Application.ActiveDocument.Range(), textBoxContent);
+                var docRange = Globals.ThisAddIn.Application.ActiveDocument.Range();
+                var streamingAnswer = RAGControl.AskQuestion(
+                    _systemPrompt,
+                    new List<UserChatMessage> { new UserChatMessage(textBoxContent) },
+                    docRange
+                );
 
                 // Clear any selected text by the user
                 if (rangeBeforeChat.End - rangeBeforeChat.Start > 0)
@@ -62,16 +60,13 @@ namespace TextForge
             }
         }
 
-        public static AsyncCollectionResult<StreamingChatCompletionUpdate> AskQuestion(SystemChatMessage systemPrompt, Word.Range context, string prompt)
+        private void PromptTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            string document = (Globals.ThisAddIn.Application.ActiveDocument.Words.Count * 1.4 > ThisAddIn.ContextLength * 0.4) ? RAGControl.GetWordDocumentAsRAG(prompt, context) : context.Text;
-
-            // 0.1 of context length leftover to account for UserChatMessage and other stuff
-            SystemChatMessage systemPromptBounded = new SystemChatMessage(RAGControl.SubstringTokens(systemPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * 0.1)));
-            UserChatMessage fullPrompt = new UserChatMessage($@"{RAGControl.SubstringTokens(prompt, (int) (ThisAddIn.ContextLength * 0.2))}{Environment.NewLine}RAG Context: ""{ThisAddIn.RagControl.GetRAGContext(prompt, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}Document Content: ""{RAGControl.SubstringTokens(document, (int)(ThisAddIn.ContextLength * 0.4))}""");
-            
-            ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
-            return client.CompleteChatStreamingAsync(new List<ChatMessage>() { systemPromptBounded, fullPrompt }, null, ThisAddIn.CancellationTokenSource.Token);
+            if (e.Control && e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                this.GenerateButton.PerformClick();
+            }
         }
     }
 }
