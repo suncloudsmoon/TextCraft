@@ -8,13 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.Word;
 using OpenAI.Chat;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.PageSegmenter;
-using UglyToad.PdfPig.Exceptions;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using Task = System.Threading.Tasks.Task;
 using Word = Microsoft.Office.Interop.Word;
 
@@ -22,16 +19,17 @@ namespace TextForge
 {
     public partial class RAGControl : UserControl
     {
+        // Public
         public HyperVectorDB.HyperVectorDB DB { get { return _db; } }
         public bool IsIndexing {  get { return _isIndexing; } }
+        public static readonly int CHUNK_LEN = TokensToCharCount(256);
 
-        private BindingList<string> _fileList;
+        // Private
         private Queue<string> _removalQueue = new Queue<string>();
+        private ConcurrentDictionary<int, int> _indexFileCount = new ConcurrentDictionary<int, int>();
+        private BindingList<string> _fileList;
         private HyperVectorDB.HyperVectorDB _db;
         private bool _isIndexing;
-        private ConcurrentDictionary<int, int> _indexFileCount = new ConcurrentDictionary<int, int>();
-
-        public static readonly int CHUNK_LEN = TokensToCharCount(256);
         private readonly object progressBarLock = new object();
 
         private static readonly Dictionary<string, int> modelsContextLength = new Dictionary<string, int>()
