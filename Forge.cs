@@ -68,7 +68,7 @@ namespace TextForge
                 _ragControlTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(ThisAddIn.RagControl, this.RAGControlButton.Label);
             } catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -79,7 +79,7 @@ namespace TextForge
                 _generateTaskPane.Visible = !_generateTaskPane.Visible;
             } catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -93,7 +93,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
         private void DefaultCheckBox_Click(object sender, RibbonControlEventArgs e)
@@ -107,7 +107,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -119,7 +119,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -131,7 +131,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
         private void CancelButton_Click(object sender, RibbonControlEventArgs e)
@@ -145,7 +145,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -170,7 +170,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 

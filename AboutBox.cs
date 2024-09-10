@@ -8,13 +8,20 @@ namespace TextForge
     {
         public AboutBox()
         {
-            InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
-            this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
-            this.labelCopyright.Text = AssemblyCopyright;
-            this.labelCompanyName.Text = AssemblyCompany;
-            this.LicenseTextBox.Text = Properties.Resources.THIRD_PARTY;
+            try
+            {
+                InitializeComponent();
+                this.Text = String.Format("About {0}", AssemblyTitle);
+                this.labelProductName.Text = AssemblyProduct;
+                this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+                this.labelCopyright.Text = AssemblyCopyright;
+                this.labelCompanyName.Text = AssemblyCompany;
+                this.LicenseTextBox.Text = Properties.Resources.THIRD_PARTY;
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
         }
 
         #region Assembly Attribute Accessors

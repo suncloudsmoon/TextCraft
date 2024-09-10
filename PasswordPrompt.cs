@@ -9,12 +9,25 @@ namespace TextForge
 
         public PasswordPrompt()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
         }
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            Close();
+            try
+            {
+                this.Close();
+            } catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
         }
     }
 }

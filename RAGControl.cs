@@ -152,11 +152,17 @@ namespace TextForge
 
         public RAGControl()
         {
-            InitializeComponent();
-            _fileList = new BindingList<string>();
-            FileListBox.DataSource = _fileList;
+            try
+            {
+                InitializeComponent();
+                _fileList = new BindingList<string>();
+                FileListBox.DataSource = _fileList;
 
-            _db = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
+                _db = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
+            } catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -207,7 +213,7 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -229,7 +235,7 @@ namespace TextForge
                 AutoHideRemoveButton();
             } catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 

@@ -118,13 +118,21 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            Properties.Settings.Default.Save();
+            try
+            {
+                this.Application.WindowSelectionChange -= new Word.ApplicationEvents4_WindowSelectionChangeEventHandler(Document_CommentsEventHandler);
+                Properties.Settings.Default.Save();
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
         }
 
         public static void InitializeAddin()
@@ -137,44 +145,51 @@ namespace TextForge
 
         private async void Document_CommentsEventHandler(Word.Selection selection)
         {
-            // For preventing unnecessary iteration of comments every time something changes in Word.
-            int numComments = this.Application.ActiveDocument.Comments.Count;
-            if (numComments != _prevNumComments)
+            try
             {
-                Comments comments = this.Application.ActiveDocument.Comments;
-                
-                List<Comment> topLevelAIComments = new List<Comment>();
-                foreach (Comment c in comments)
-                    if (c.Ancestor == null && c.Author == _model)
-                        topLevelAIComments.Add(c);
-
-                foreach (Comment c in topLevelAIComments)
+                // For preventing unnecessary iteration of comments every time something changes in Word.
+                int numComments = this.Application.ActiveDocument.Comments.Count;
+                if (numComments != _prevNumComments)
                 {
-                    if (c.Replies.Count == 0) continue;
-                    if (c.Replies[c.Replies.Count].Author != _model && !_isDraftingComment)
+                    Comments comments = this.Application.ActiveDocument.Comments;
+
+                    List<Comment> topLevelAIComments = new List<Comment>();
+                    foreach (Comment c in comments)
+                        if (c.Ancestor == null && c.Author == _model)
+                            topLevelAIComments.Add(c);
+
+                    foreach (Comment c in topLevelAIComments)
                     {
-                        _isDraftingComment = true;
-
-                        List<ChatMessage> chatHistory = new List<ChatMessage>();
-                        chatHistory.Add(new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{c.Range.Text}"""));
-                        chatHistory.Add(new UserChatMessage($@"Based on the previous AI comments, suggest additional specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document."));
-                        for (int i = 1; i <= c.Replies.Count; i++)
+                        if (c.Replies.Count == 0) continue;
+                        if (c.Replies[c.Replies.Count].Author != _model && !_isDraftingComment)
                         {
-                            Comment reply = c.Replies[i];
-                            chatHistory.Add((i % 2 == 1) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
+                            _isDraftingComment = true;
+
+                            List<ChatMessage> chatHistory = new List<ChatMessage>();
+                            chatHistory.Add(new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{c.Range.Text}"""));
+                            chatHistory.Add(new UserChatMessage($@"Based on the previous AI comments, suggest additional specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document."));
+                            for (int i = 1; i <= c.Replies.Count; i++)
+                            {
+                                Comment reply = c.Replies[i];
+                                chatHistory.Add((i % 2 == 1) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
+                            }
+
+                            await Forge.AddComment(
+                                c.Replies,
+                                c.Range,
+                                RAGControl.AskQuestion(Forge.SystemPrompt, chatHistory, this.Application.ActiveDocument.Range())
+                            );
+                            numComments++;
+
+                            _isDraftingComment = false;
                         }
-
-                        await Forge.AddComment(
-                            c.Replies,
-                            c.Range,
-                            RAGControl.AskQuestion(Forge.SystemPrompt, chatHistory, this.Application.ActiveDocument.Range())
-                        );
-                        numComments++;
-
-                        _isDraftingComment = false;
                     }
+                    _prevNumComments = numComments;
                 }
-                _prevNumComments = numComments;
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
             }
         }
 

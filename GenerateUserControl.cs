@@ -15,7 +15,7 @@ namespace TextForge
                 InitializeComponent();
             } catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
@@ -56,16 +56,23 @@ namespace TextForge
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CommonUtils.DisplayError(ex);
             }
         }
 
         private void PromptTextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Enter)
+            try
             {
-                e.SuppressKeyPress = true;
-                this.GenerateButton.PerformClick();
+                if (e.Control && e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    this.GenerateButton.PerformClick();
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
             }
         }
     }
