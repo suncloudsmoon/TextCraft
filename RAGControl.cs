@@ -148,6 +148,8 @@ namespace TextForge
             { "nuextract", 4096 },
             { "firefunction-v2", 8192 },
             { "deepseek-v2.5", 163840 },
+            // new models
+            { "minicpm-v", 32768 },
         };
 
         public RAGControl()

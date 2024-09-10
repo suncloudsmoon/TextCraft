@@ -87,7 +87,7 @@ namespace TextForge
         {
             try
             {
-                ThisAddIn.Model = ModelListDropDown.SelectedItem.Label;
+                ThisAddIn.Model = GetSelectedItemLabel();
                 ThisAddIn.ContextLength = RAGControl.GetContextLength(ThisAddIn.Model);
                 UpdateCheckbox();
             }
@@ -101,7 +101,7 @@ namespace TextForge
             try
             {
                 if (this.DefaultCheckBox.Checked)
-                    Properties.Settings.Default.DefaultModel = ModelListDropDown.SelectedItem.Label;
+                    Properties.Settings.Default.DefaultModel = GetSelectedItemLabel();
                 else
                     Properties.Settings.Default.DefaultModel = null;
             }
@@ -109,6 +109,11 @@ namespace TextForge
             {
                 CommonUtils.DisplayError(ex);
             }
+        }
+
+        private string GetSelectedItemLabel()
+        {
+            return ModelListDropDown.SelectedItem.Label;
         }
 
         private void RAGControlButton_Click(object sender, RibbonControlEventArgs e)
@@ -247,8 +252,8 @@ namespace TextForge
             }
             CancelButtonVisibility(false);
 
-            range.Text = ThisAddIn.RemoveMarkdownSyntax(response.ToString());
-            ThisAddIn.ApplyAllMarkdownFormatting(range, response.ToString());
+            range.Text = WordMarkdown.RemoveMarkdownSyntax(response.ToString());
+            WordMarkdown.ApplyAllMarkdownFormatting(range, response.ToString());
         }
 
         public static void CancelButtonVisibility(bool option)
@@ -283,7 +288,7 @@ namespace TextForge
                         comment.Append(content.Text);
                     }
                 }
-                c.Range.Text = ThisAddIn.RemoveMarkdownSyntax(comment.ToString());
+                c.Range.Text = WordMarkdown.RemoveMarkdownSyntax(comment.ToString());
             });
         }
 
