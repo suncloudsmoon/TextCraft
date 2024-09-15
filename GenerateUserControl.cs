@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using OpenAI.Chat;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TextForge
 {
@@ -69,11 +71,47 @@ namespace TextForge
                     e.SuppressKeyPress = true;
                     this.GenerateButton.PerformClick();
                 }
+                else if (e.Control && e.KeyCode == Keys.Back)
+                {
+                    e.SuppressKeyPress = true;
+                    int cursorPosition = this.PromptTextBox.SelectionStart;
+                    string text = this.PromptTextBox.Text;
+
+                    // Handle multiple trailing spaces
+                    while (cursorPosition > 0 && text[cursorPosition - 1] == ' ')
+                    {
+                        cursorPosition--;
+                    }
+
+                    text = text.TrimEnd();
+
+                    if (string.IsNullOrWhiteSpace(text))
+                    {
+                        this.PromptTextBox.Clear();
+                        this.PromptTextBox.SelectionStart = 0;
+                    }
+                    else
+                    {
+                        int lastSpaceIndex = text.LastIndexOf(' ', cursorPosition - 1);
+                        if (lastSpaceIndex != -1)
+                        {
+                            // Retain a space after deletion
+                            this.PromptTextBox.Text = text.Remove(lastSpaceIndex + 1, cursorPosition - lastSpaceIndex - 1);
+                            this.PromptTextBox.SelectionStart = lastSpaceIndex + 1;
+                        }
+                        else
+                        {
+                            this.PromptTextBox.Text = text.Remove(0, cursorPosition);
+                            this.PromptTextBox.SelectionStart = 0;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 CommonUtils.DisplayError(ex);
             }
         }
+
     }
 }

@@ -352,8 +352,17 @@ namespace TextForge
         {
             string language = match.Groups[1].Value;
             string code = match.Groups[2].Value;
+            
+            formatRange.SetRange(searchIndex - offset, searchIndex - offset + code.Length);
             ApplySyntaxHighlighting(formatRange, language, code);
-            offsetIncrement += 6;
+
+            // Add borders around the code block
+            formatRange.Borders[Word.WdBorderType.wdBorderTop].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            formatRange.Borders[Word.WdBorderType.wdBorderBottom].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            formatRange.Borders[Word.WdBorderType.wdBorderLeft].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
+            formatRange.Borders[Word.WdBorderType.wdBorderRight].LineStyle = Word.WdLineStyle.wdLineStyleSingle;
+
+            offsetIncrement += 6 + language.Length;
         }
 
         private static void ApplyLinkFormatting(Word.Range formatRange, int searchIndex, int offset, Match match, ref int offsetIncrement)

@@ -2,6 +2,7 @@
 using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace TextForge
     public partial class Forge
     {
         // Public
-        public static readonly SystemChatMessage SystemPrompt = new SystemChatMessage("You are an expert writing assistant and editor, specialized in enhancing the clarity, coherence, and impact of text within a document. You analyze text critically and provide constructive feedback to improve the overall quality.");
+        public static readonly SystemChatMessage CommentSystemPrompt = new SystemChatMessage("You are an expert writing assistant and editor, specialized in enhancing the clarity, coherence, and impact of text within a document. You analyze text critically and provide constructive feedback to improve the overall quality.");
 
         // Private
         private AboutBox _box;
@@ -36,30 +37,8 @@ namespace TextForge
                 List<string> models = new List<string>(ThisAddIn.ModelList);
 
                 // Remove embedding models from the list
-                var copyList = new List<string>(models);
-                foreach (var model in copyList)
-                {
-                    foreach (var item in ThisAddIn.EmbedModels)
-                        if (model.Contains(item))
-                            models.Remove(model);
-                    if (model.Contains("embed"))
-                        models.Remove(model);
-                }
-
-                var ribbonFactory = Globals.Factory.GetRibbonFactory();
-                foreach (string model in models)
-                {
-                    var newItem = ribbonFactory.CreateRibbonDropDownItem();
-                    newItem.Label = model;
-
-                    ModelListDropDown.Items.Add(newItem);
-
-                    if (model == ThisAddIn.Model)
-                    {
-                        ModelListDropDown.SelectedItem = newItem;
-                        UpdateCheckbox();
-                    }
-                }
+                RemoveEmbeddingModels(ref models);
+                AddEmbeddingModelsToDropDownList(models);
 
                 _box = new AboutBox();
                 _optionsBox = this.OptionsGroup;
@@ -69,6 +48,37 @@ namespace TextForge
             } catch (Exception ex)
             {
                 CommonUtils.DisplayError(ex);
+            }
+        }
+
+        private void RemoveEmbeddingModels(ref List<string> modelList)
+        {
+            var copyList = new List<string>(modelList);
+            foreach (var model in copyList)
+            {
+                foreach (var item in ModelProperties.UniqueEmbedModels)
+                    if (model.Contains(item))
+                        modelList.Remove(model);
+                if (model.Contains("embed"))
+                    modelList.Remove(model);
+            }
+        }
+
+        private void AddEmbeddingModelsToDropDownList(List<string> models)
+        {
+            var ribbonFactory = Globals.Factory.GetRibbonFactory();
+            foreach (string model in models)
+            {
+                var newItem = ribbonFactory.CreateRibbonDropDownItem();
+                newItem.Label = model;
+
+                ModelListDropDown.Items.Add(newItem);
+
+                if (model == ThisAddIn.Model)
+                {
+                    ModelListDropDown.SelectedItem = newItem;
+                    UpdateCheckbox();
+                }
             }
         }
 
@@ -88,7 +98,7 @@ namespace TextForge
             try
             {
                 ThisAddIn.Model = GetSelectedItemLabel();
-                ThisAddIn.ContextLength = RAGControl.GetContextLength(ThisAddIn.Model);
+                ThisAddIn.ContextLength = ModelProperties.GetContextLength(ThisAddIn.Model);
                 UpdateCheckbox();
             }
             catch (Exception ex)
@@ -141,11 +151,10 @@ namespace TextForge
         }
         private void CancelButton_Click(object sender, RibbonControlEventArgs e)
         {
-
             try
             {
-                ThisAddIn.CancellationTokenSource.Cancel();
                 CancelButtonVisibility(false);
+                ThisAddIn.CancellationTokenSource.Cancel();
                 ThisAddIn.CancellationTokenSource = new CancellationTokenSource();
             }
             catch (Exception ex)
@@ -170,7 +179,7 @@ namespace TextForge
                         await RewriteButton_Click();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentOutOfRangeException("Invalid button name!");
                 }
             }
             catch (Exception ex)
@@ -181,13 +190,14 @@ namespace TextForge
 
         private static async Task ReviewButton_Click()
         {
-            Word.Paragraphs paragraphs = Globals.ThisAddIn.Application.ActiveDocument.Paragraphs;
             const string prompt = "As an expert writing assistant, suggest specific improvements to the paragraph, focusing on clarity, coherence, structure, grammar, and overall effectiveness. Ensure that your suggestions are detailed and aimed at improving the paragraph within the context of the entire Document.";
+            Word.Paragraphs paragraphs = CommonUtils.GetActiveDocument().Paragraphs;
 
             bool hasCommented = false; 
             if (Globals.ThisAddIn.Application.Selection.End - Globals.ThisAddIn.Application.Selection.Start > 0)
             {
-                await AddComment(Globals.ThisAddIn.Application.ActiveDocument.Comments, Globals.ThisAddIn.Application.Selection.Range, Review(paragraphs, Globals.ThisAddIn.Application.Selection.Range, prompt));
+                var selectionRange = CommonUtils.GetSelectionRange();
+                await CommentHandler.AddComment(CommonUtils.GetComments(), selectionRange, Review(paragraphs, selectionRange, prompt));
                 hasCommented = true;
             }
             else
@@ -196,10 +206,9 @@ namespace TextForge
                     // It isn't a paragraph if it doesn't contain a full stop.
                     if (p.Range.Text.Contains('.'))
                     {
-                        await AddComment(Globals.ThisAddIn.Application.ActiveDocument.Comments, p.Range, Review(paragraphs, p.Range, prompt));
+                        await CommentHandler.AddComment(CommonUtils.GetComments(), p.Range, Review(paragraphs, p.Range, prompt));
                         hasCommented = true;
                     }
-
             }
             if (!hasCommented)
                 MessageBox.Show("Review complete!", "Action Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -266,37 +275,15 @@ namespace TextForge
             DefaultCheckBox.Checked = (Properties.Settings.Default.DefaultModel == ThisAddIn.Model);
         }
 
-        public static async Task AddComment(Word.Comments comments, Word.Range range, AsyncCollectionResult<StreamingChatCompletionUpdate> streamingContent)
-        {
-            Word.Comment c = comments.Add(range, string.Empty);
-            c.Author = ThisAddIn.Model;
-            Word.Range commentRange = c.Range.Duplicate; // Duplicate the range to work with
-
-            StringBuilder comment = new StringBuilder();
-            // Run the comment generation in a background thread
-            await Task.Run(async () =>
-            {
-                await foreach (var update in streamingContent.WithCancellation(ThisAddIn.CancellationTokenSource.Token))
-                {
-                    if (ThisAddIn.CancellationTokenSource.IsCancellationRequested)
-                        break;
-                    foreach (var content in update.ContentUpdate)
-                    {
-                        commentRange.Collapse(Word.WdCollapseDirection.wdCollapseEnd); // Move to the end of the range
-                        commentRange.Text = content.Text; // Append new text
-                        commentRange = c.Range.Duplicate; // Update the range to include the new text
-                        comment.Append(content.Text);
-                    }
-                }
-                c.Range.Text = WordMarkdown.RemoveMarkdownSyntax(comment.ToString());
-            });
-        }
-
         private static AsyncCollectionResult<StreamingChatCompletionUpdate> Review(Word.Paragraphs context, Word.Range p, string prompt)
         {
             var docRange = Globals.ThisAddIn.Application.ActiveDocument.Range();
-            UserChatMessage commentPrompt = new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{RAGControl.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}""{Environment.NewLine}{prompt}");
-            return RAGControl.AskQuestion(SystemPrompt, new List<UserChatMessage> { commentPrompt }, docRange);
+            List<UserChatMessage> userChat = new List<UserChatMessage>()
+            {
+                new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{CommonUtils.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}"""),
+                new UserChatMessage(prompt)
+            };
+            return RAGControl.AskQuestion(CommentSystemPrompt, userChat, docRange);
         }
     }
 }
