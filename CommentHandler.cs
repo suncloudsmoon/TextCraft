@@ -42,11 +42,17 @@ namespace TextForge
                             Comment reply = c.Replies[i];
                             chatHistory.Add((i % 2 == 1) ? new UserChatMessage(reply.Range.Text) : new AssistantChatMessage(reply.Range.Text));
                         }
-                        await AddComment(
-                            c.Replies,
-                            c.Range,
-                            RAGControl.AskQuestion(Forge.CommentSystemPrompt, chatHistory, CommonUtils.GetActiveDocument().Range())
-                        );
+                        try
+                        {
+                            await AddComment(
+                                c.Replies,
+                                c.Range,
+                                RAGControl.AskQuestion(Forge.CommentSystemPrompt, chatHistory, CommonUtils.GetActiveDocument().Range())
+                            );
+                        } catch (OperationCanceledException ex)
+                        {
+                            CommonUtils.DisplayWarning(ex);
+                        }
                         numComments++;
 
                         _isDraftingComment = false;

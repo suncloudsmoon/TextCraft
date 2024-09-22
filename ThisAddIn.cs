@@ -5,6 +5,7 @@ using System.Threading;
 using HyperVectorDB.Embedder;
 using OpenAI;
 using OpenAI.Models;
+using System.ClientModel;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TextForge
@@ -12,7 +13,6 @@ namespace TextForge
     public partial class ThisAddIn
     {
         // Public
-        public const int BaselineContextWindowLength = 4096; // Change this if necessary
         public static string OpenAIEndpoint { get { return _openAIEndpoint; } }
         public static string ApiKey { get { return _apiKey; } }
         public static string Model { get { return _model; } set { _model = value; } }
@@ -30,14 +30,13 @@ namespace TextForge
         private static string _apiKey = "dummy_key";
         private static string _model = "gpt-4o";
         private static string _embedModel = string.Empty;
-        private static int _contextLength = BaselineContextWindowLength;
+        private static int _contextLength = ModelProperties.BaselineContextWindowLength;
         private static OpenAIClientOptions _clientOptions;
         private static EmbedderOpenAI _embedder;
         private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private static RAGControl _ragControl;
         private static bool _isAddinInitialized = false;
         private static IEnumerable<string> _modelList;
-
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
@@ -87,7 +86,7 @@ namespace TextForge
                 ProjectId = "Operation Clippy",
                 ApplicationId = "TextCraft"
             };
-            ModelClient modelRetriever = new ModelClient(_apiKey, _clientOptions);
+            ModelClient modelRetriever = new ModelClient(new ApiKeyCredential(_apiKey), _clientOptions);
             _modelList = ModelProperties.GetModelList(modelRetriever); // caching the response
 
             string defaultModel = Properties.Settings.Default.DefaultModel;

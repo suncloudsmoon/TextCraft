@@ -13,6 +13,22 @@ namespace TextForge
             MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        public static void DisplayWarning(Exception ex)
+        {
+            MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        public static void DisplayInformation(Exception ex)
+        {
+            MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static bool GetInternetAccessPermission(string url)
+        {
+            var result = MessageBox.Show($"Do you want to allow TextCraft to access the following internet resource?{Environment.NewLine}{url}", "Internet Access", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            return result == DialogResult.Yes;
+        }
+
         public static Word.Application GetApplication()
         {
             return Globals.ThisAddIn.Application;

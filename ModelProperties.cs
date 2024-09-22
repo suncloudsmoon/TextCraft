@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenAI.Models;
 
 namespace TextForge
@@ -10,6 +8,7 @@ namespace TextForge
     internal class ModelProperties
     {
         // Public
+        public const int BaselineContextWindowLength = 4096; // Change this if necessary
         public static List<string> UniqueEmbedModels { get { return _embedModels; } }
 
         // Private
@@ -140,6 +139,12 @@ namespace TextForge
             // new models
             { "minicpm-v", 32768 },
             { "reader-lm", 256000 },
+            { "mistral-small", 131072 },
+            { "bespoke-minicheck", 32768 },
+            { "qwen2.5", 32768 },
+            { "nemotron-mini", 4096 },
+            { "solar-pro", 4096 },
+            { "qwen2.5-coder", 32768 }
         };
 
         public static int GetContextLength(string modelName)
@@ -151,7 +156,7 @@ namespace TextForge
             else if (modelName.Contains(':'))
             {
                 string key = modelName.Split(':')[0];
-                return ollamaModelsContextLength.ContainsKey(key) ? ollamaModelsContextLength[key] : ThisAddIn.BaselineContextWindowLength;
+                return ollamaModelsContextLength.ContainsKey(key) ? ollamaModelsContextLength[key] : BaselineContextWindowLength;
             }
             else if (modelName.StartsWith("o1"))
             {
@@ -175,7 +180,7 @@ namespace TextForge
             }
             else
             {
-                return ThisAddIn.BaselineContextWindowLength;
+                return BaselineContextWindowLength;
             }
         }
 

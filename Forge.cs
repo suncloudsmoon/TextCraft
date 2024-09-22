@@ -2,7 +2,6 @@
 using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -197,7 +196,13 @@ namespace TextForge
             if (Globals.ThisAddIn.Application.Selection.End - Globals.ThisAddIn.Application.Selection.Start > 0)
             {
                 var selectionRange = CommonUtils.GetSelectionRange();
-                await CommentHandler.AddComment(CommonUtils.GetComments(), selectionRange, Review(paragraphs, selectionRange, prompt));
+                try
+                {
+                    await CommentHandler.AddComment(CommonUtils.GetComments(), selectionRange, Review(paragraphs, selectionRange, prompt));
+                } catch (OperationCanceledException ex)
+                {
+                    CommonUtils.DisplayWarning(ex);
+                }
                 hasCommented = true;
             }
             else
@@ -235,14 +240,21 @@ namespace TextForge
             var selectionRange = Globals.ThisAddIn.Application.Selection.Range;
             var range = (selectionRange.End - selectionRange.Start > 0) ? selectionRange : throw new InvalidRangeException("No text is selected for analysis!");
             
-            ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
+            ChatClient client = new ChatClient(ThisAddIn.Model, new ApiKeyCredential(ThisAddIn.ApiKey), ThisAddIn.ClientOptions);
             var streamingAnswer = client.CompleteChatStreamingAsync(
                 new List<ChatMessage>() { new SystemChatMessage(systemPrompt), new UserChatMessage(@$"{userPrompt}: {range.Text}") },
-                new ChatCompletionOptions() { MaxTokens = ThisAddIn.ContextLength },
+                new ChatCompletionOptions() { MaxOutputTokenCount = ThisAddIn.ContextLength },
                 ThisAddIn.CancellationTokenSource.Token
             );
+
             range.Delete();
-            await AddStreamingContentToRange(streamingAnswer, range);
+            try
+            {
+                await AddStreamingContentToRange(streamingAnswer, range);
+            } catch (OperationCanceledException ex)
+            {
+                CommonUtils.DisplayWarning(ex);
+            }
             Globals.ThisAddIn.Application.Selection.SetRange(range.Start, range.End);
         }
 

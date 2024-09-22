@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -25,9 +24,10 @@ namespace TextForge
         public static readonly int CHUNK_LEN = CommonUtils.TokensToCharCount(256);
 
         // Private
+        private ToolTip _fileToolTip = new ToolTip();
         private Queue<string> _removalQueue = new Queue<string>();
         private ConcurrentDictionary<int, int> _indexFileCount = new ConcurrentDictionary<int, int>();
-        private BindingList<string> _fileList;
+        private BindingList<KeyValuePair<string, string>> _fileList; // Use KeyValuePair for label and filename
         private HyperVectorDB.HyperVectorDB _db;
         private bool _isIndexing;
         private readonly object progressBarLock = new object();
@@ -37,11 +37,20 @@ namespace TextForge
             try
             {
                 InitializeComponent();
-                _fileList = new BindingList<string>();
+                _fileList = new BindingList<KeyValuePair<string, string>>();
                 FileListBox.DataSource = _fileList;
+                FileListBox.DisplayMember = "Key";  // Display the label (Key)
+                FileListBox.ValueMember = "Value";  // Internally use the filename (Value)
+
+                //_fileToolTip.AutomaticDelay = 500;
+                _fileToolTip.ShowAlways = true;     // Always show the tooltip
+
+                // Attach MouseMove event to FileListBox to display the full path in the tooltip
+                FileListBox.MouseMove += FileListBox_MouseMove;
 
                 _db = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 CommonUtils.DisplayError(ex);
             }
@@ -58,9 +67,9 @@ namespace TextForge
                     {
                         foreach (string fileName in openFileDialog.FileNames)
                         {
-                            if (!_fileList.Contains(fileName))
+                            if (!_fileList.Any(file => file.Value == fileName))
                             {
-                                _fileList.Add(fileName);
+                                _fileList.Add(new KeyValuePair<string, string>("📄 " + Path.GetFileName(fileName), fileName));
                                 filesToIndex.Add(fileName);
                                 if (!RemoveButton.Enabled)
                                 {
@@ -121,6 +130,25 @@ namespace TextForge
             }
         }
 
+        private void FileListBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Get the index of the item under the mouse cursor
+            int index = FileListBox.IndexFromPoint(e.Location);
+            if (index != ListBox.NoMatches)
+            {
+                // Get the KeyValuePair (label, file path) for the item
+                var item = (KeyValuePair<string, string>)FileListBox.Items[index];
+
+                // Show the file path in the tooltip
+                _fileToolTip.SetToolTip(FileListBox, item.Value);
+            }
+            else
+            {
+                // Clear the tooltip if not hovering over an item
+                _fileToolTip.SetToolTip(FileListBox, string.Empty);
+            }
+        }
+
         private void AutoHideRemoveButton()
         {
             if (_fileList.Count == 0)
@@ -137,7 +165,14 @@ namespace TextForge
             {
                 this.Invoke((MethodInvoker)delegate
                 {
-                    _fileList.Remove(filePath);
+                    // Find and remove the file entry from _fileList based on the internal filename (filePath)
+                    var fileEntry = _fileList.FirstOrDefault(file => file.Value == filePath);
+                    if (fileEntry.Key != null) // If the file entry is found
+                    {
+                        _fileList.Remove(fileEntry);
+                    }
+
+                    // Automatically hide the remove button if there are no more files in the list
                     AutoHideRemoveButton();
                 });
                 throw;
@@ -218,13 +253,20 @@ namespace TextForge
         private void ProcessRemovalQueue()
         {
             int initialQueueCount = _removalQueue.Count;
+
             for (int i = 0; i < initialQueueCount; i++)
             {
                 string documentToRemove = _removalQueue.Dequeue();
-                if (!_fileList.Contains(documentToRemove))
+
+                // Check if the document (by filename) exists in the _fileList
+                var fileEntry = _fileList.FirstOrDefault(file => file.Value == documentToRemove);
+
+                // If the document is found, attempt to remove it
+                if (fileEntry.Key != null)
                 {
-                    if (!RemoveDocument(documentToRemove))
+                    if (!RemoveDocument(documentToRemove)) // Try removing the document
                     {
+                        // If removal fails, re-enqueue the document and stop processing
                         _removalQueue.Enqueue(documentToRemove);
                         break;
                     }
@@ -325,7 +367,7 @@ namespace TextForge
         public string GetRAGContext(string query, int maxTokens)
         {
             if (_fileList.Count == 0) return string.Empty;
-            var result = _db.QueryCosineSimilarity(query, _fileList.Count * 5); // 5 results per file
+            var result = _db.QueryCosineSimilarity(query, _fileList.Count * 10); // 10 results per file
             StringBuilder ragContext = new StringBuilder();
             foreach (var document in result.Documents)
                 ragContext.AppendLine(document.DocumentString);
@@ -360,11 +402,11 @@ namespace TextForge
                 chatHistory.Add(new UserChatMessage($@"RAG Context: ""{ragQuery}"""));
             chatHistory.AddRange(messages);
 
-            ChatClient client = new ChatClient(ThisAddIn.Model, ThisAddIn.ApiKey, ThisAddIn.ClientOptions);
+            ChatClient client = new ChatClient(ThisAddIn.Model, new ApiKeyCredential(ThisAddIn.ApiKey), ThisAddIn.ClientOptions);
             // https://github.com/ollama/ollama/pull/6504
             return client.CompleteChatStreamingAsync(
                 chatHistory,
-                new ChatCompletionOptions() { MaxTokens = ThisAddIn.ContextLength },
+                new ChatCompletionOptions() { MaxOutputTokenCount = ThisAddIn.ContextLength },
                 ThisAddIn.CancellationTokenSource.Token
             );
         }

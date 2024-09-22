@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using OpenAI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TextForge
 {
@@ -27,7 +25,7 @@ namespace TextForge
             {
                 string textBoxContent = this.PromptTextBox.Text;
                 if (textBoxContent.Length == 0)
-                    throw new ArgumentException("The textbox is empty!");
+                    throw new TextBoxEmptyException("The textbox is empty!");
 
                 /*
                  * So, If the user changes the selection carot in Word after clicking "generate" (bc it takes so long to generate text).
@@ -48,13 +46,13 @@ namespace TextForge
                 await Forge.AddStreamingContentToRange(streamingAnswer, rangeBeforeChat);
                 Globals.ThisAddIn.Application.Selection.SetRange(rangeBeforeChat.Start, rangeBeforeChat.End);
             }
-            catch (ArgumentException ex)
+            catch (TextBoxEmptyException ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CommonUtils.DisplayInformation(ex);
             }
             catch (OperationCanceledException ex)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CommonUtils.DisplayWarning(ex);
             }
             catch (Exception ex)
             {
@@ -112,6 +110,10 @@ namespace TextForge
                 CommonUtils.DisplayError(ex);
             }
         }
+    }
 
+    public class TextBoxEmptyException : ArgumentException
+    {
+        public TextBoxEmptyException(string message) : base(message) { }
     }
 }

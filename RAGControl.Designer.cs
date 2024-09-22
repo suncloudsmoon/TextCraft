@@ -49,6 +49,7 @@
             this.FileListBox.Size = new System.Drawing.Size(330, 504);
             this.FileListBox.Sorted = true;
             this.FileListBox.TabIndex = 0;
+            this.FileListBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileListBox_MouseMove);
             // 
             // RemoveButton
             // 

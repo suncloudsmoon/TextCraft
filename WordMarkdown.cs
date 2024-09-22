@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using Task = System.Threading.Tasks.Task;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TextForge
 {
     internal class WordMarkdown
     {
+        private static readonly HttpClient client = new HttpClient();
+
         private static readonly Dictionary<string, string[]> Keywords = new Dictionary<string, string[]>
         {
             ["python"] = new[]
@@ -59,7 +64,43 @@ namespace TextForge
             "instanceof", "int", "interface", "let", "long", "native", "new", "null", "package", "private", "protected",
             "public", "return", "short", "static", "super", "switch", "synchronized", "this", "throw", "throws",
             "transient", "true", "try", "typeof", "var", "void", "volatile", "while", "with", "yield"
-        }
+        },
+            ["php"] = new[]
+        {
+            "abstract", "and", "array", "as", "break", "callable", "case", "catch", "class", "clone", "const", "continue",
+            "declare", "default", "do", "echo", "else", "elseif", "enddeclare", "endfor", "endforeach", "endif", "endswitch",
+            "endwhile", "extends", "final", "finally", "for", "foreach", "function", "global", "goto", "if", "implements",
+            "include", "include_once", "instanceof", "insteadof", "interface", "isset", "list", "namespace", "new", "or",
+            "print", "private", "protected", "public", "require", "require_once", "return", "static", "switch", "throw",
+            "trait", "try", "unset", "use", "var", "while", "xor", "yield"
+        },
+            ["ruby"] = new[]
+        {
+            "BEGIN", "END", "alias", "and", "begin", "break", "case", "class", "def", "defined?", "do", "else", "elsif",
+            "end", "ensure", "false", "for", "if", "in", "module", "next", "nil", "not", "or", "redo", "rescue", "retry",
+            "return", "self", "super", "then", "true", "undef", "unless", "until", "when", "while", "yield"
+        },
+            ["swift"] = new[]
+        {
+            "Any", "as", "associatedtype", "associativity", "break", "case", "catch", "class", "continue", "convenience",
+            "default", "defer", "deinit", "do", "dynamic", "else", "enum", "extension", "fallthrough", "false", "fileprivate",
+            "final", "for", "func", "get", "guard", "if", "import", "in", "indirect", "infix", "init", "inout", "internal",
+            "is", "lazy", "let", "mutating", "nil", "none", "nonmutating", "open", "operator", "optional", "override", "postfix",
+            "precedence", "prefix", "private", "protocol", "public", "repeat", "required", "rethrows", "return", "self", "set",
+            "some", "static", "struct", "subscript", "super", "switch", "throw", "throws", "true", "try", "typealias", "var",
+            "where", "while"
+        },
+            ["go"] = new[]
+        {
+            "break", "case", "chan", "const", "continue", "default", "defer", "else", "fallthrough", "for", "func", "go",
+            "goto", "if", "import", "interface", "map", "package", "range", "return", "select", "struct", "switch", "type",
+            "var"
+        },
+            ["r"] = new[]
+        {
+            "if", "else", "repeat", "while", "function", "for", "in", "next", "break", "TRUE", "FALSE", "NULL", "Inf", "NaN",
+            "NA", "NA_integer_", "NA_real_", "NA_complex_", "NA_character_"
+        },
         };
 
         private static string RemoveBoldMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.Bold, "$1");
@@ -94,7 +135,11 @@ namespace TextForge
             // Replace Environment.NewLine with \n to handle line endings consistently
             markdownText = Regex.Replace(markdownText, Environment.NewLine, "\n");
 
-            // List of functions to remove specific Markdown syntax elements
+            // Step 1: Mask code blocks (both inline and block-level) before applying removal functions
+            var codeBlockMask = new List<string>();
+            markdownText = MaskCodeBlocks(markdownText, codeBlockMask);
+
+            // List of functions to remove specific Markdown syntax elements, excluding the code blocks
             var removalFunctions = new Func<string, string>[]
             {
                 RemoveBoldMarkdownSyntax,
@@ -105,23 +150,61 @@ namespace TextForge
                 RemoveHeadingMarkdownSyntax,
                 RemoveUnorderedListMarkdownSyntax,
                 RemoveHorizontalRuleMarkdownSyntax,
-                RemoveCodeBlockMarkdownSyntax,
-                RemoveInlineCodeMarkdownSyntax,
                 RemoveImageMarkdownSyntax,
                 RemoveAlternateHeadingMarkdownSyntax,
                 RemoveLinkMarkdownSyntax
             };
 
-            // Apply each removal function to the text
+            // Apply each removal function to the text, except for code blocks
             foreach (var removeFunction in removalFunctions)
             {
                 markdownText = removeFunction(markdownText);
             }
 
+            // Step 4: After all markdown elements have been removed, unmask the code blocks
+            markdownText = UnmaskCodeBlocks(markdownText, codeBlockMask);
+
+            // Step 3: Finally, call RemoveCodeBlockMarkdownSyntax to remove code block syntax
+            markdownText = RemoveCodeBlockMarkdownSyntax(markdownText);
+            markdownText = RemoveInlineCodeMarkdownSyntax(markdownText);
+
             // Replace \n back with Environment.NewLine to restore original line endings
             markdownText = Regex.Replace(markdownText, "\n", Environment.NewLine);
+
             return markdownText;
         }
+
+        private static string MaskCodeBlocks(string markdownText, List<string> codeBlockMask)
+        {
+            // Inline code (mask this first)
+            markdownText = Regex.Replace(markdownText, RegexSyntaxFilter.InlineCode, match =>
+            {
+                var mask = $"&&INLINE&CODE&MASK&{codeBlockMask.Count}&&";
+                codeBlockMask.Add(match.Value); // Save original inline code block
+                return mask;
+            }, RegexOptions.Singleline);
+
+            // Code blocks (mask these)
+            markdownText = Regex.Replace(markdownText, RegexSyntaxFilter.CodeBlock, match =>
+            {
+                var mask = $"&&CODE&BLOCK&MASK&{codeBlockMask.Count}&&";
+                codeBlockMask.Add(match.Value); // Save original code block
+                return mask;
+            }, RegexOptions.Singleline);
+
+            return markdownText;
+        }
+
+        private static string UnmaskCodeBlocks(string markdownText, List<string> codeBlockMask)
+        {
+            for (int i = 0; i < codeBlockMask.Count; i++)
+            {
+                markdownText = markdownText.Replace($"&&INLINE&CODE&MASK&{i}&&", codeBlockMask[i]);
+                markdownText = markdownText.Replace($"&&CODE&BLOCK&MASK&{i}&&", codeBlockMask[i]);
+            }
+            return markdownText;
+        }
+
 
         private static string RemoveAllMarkdownSyntaxExcept(RegexSyntaxFilter.Number num, string markdownText)
         {
@@ -215,6 +298,8 @@ namespace TextForge
             string partialMarkdownText = RemoveAllMarkdownSyntaxExcept(formatType, fullMarkdownText);
             MatchCollection matches = regex.Matches(partialMarkdownText);
 
+            var codeBlockLocations = GetCodeBlockPoints(commentRange, RemoveAllMarkdownSyntaxExcept(RegexSyntaxFilter.Number.CodeBlock, fullMarkdownText));
+
             int searchIndex = 0;
             int offset = 0;
             foreach (Match match in matches)
@@ -223,6 +308,13 @@ namespace TextForge
                 string insideContent = match.Groups[1].Value;
                 searchIndex = commentRange.Start + partialMarkdownText.IndexOf(match.Value, searchIndex);
                 int length = textToFormat.Length;
+
+                CodeBlockPoint codeBlockLoc;
+                if (formatType != RegexSyntaxFilter.Number.CodeBlock && IsLocatedWithinCodeBlock(codeBlockLocations, searchIndex, out codeBlockLoc))
+                {
+                    searchIndex += codeBlockLoc.End - searchIndex + 1;
+                    continue;
+                }
 
                 Word.Range formatRange = commentRange.Duplicate;
                 switch (formatType)
@@ -268,8 +360,12 @@ namespace TextForge
                         ApplyFormatting(formatRange, searchIndex, offset, insideContent.Length, 10, ref offset, 6);
                         break;
                     case RegexSyntaxFilter.Number.Image:
+                        int startIndex = searchIndex - offset;
+                        formatRange.SetRange(startIndex, startIndex);
+
                         string imageUrl = match.Groups[2].Value;
-                        ApplyImageFormatting(formatRange, imageUrl);
+                        if (CommonUtils.GetInternetAccessPermission(imageUrl))
+                            ApplyImageFormatting(formatRange, imageUrl);
                         offset += length; // Adjust the offset to account for the removed text
                         break;
                     case RegexSyntaxFilter.Number.AlternateHeading:
@@ -278,6 +374,48 @@ namespace TextForge
                 }
                 searchIndex += length;
             }
+        }
+
+        private static bool IsLocatedWithinCodeBlock(List<CodeBlockPoint> points, int startIndex, out CodeBlockPoint blockPoint)
+        {
+            foreach (var point in points)
+                if (startIndex >= point.Start && startIndex <= point.End)
+                {
+                    blockPoint = point;
+                    return true;
+                }
+            blockPoint = null;
+            return false;
+        }
+
+        private static CodeBlockPoint GetCodeBlockAtIndex(List<CodeBlockPoint> points, int startIndex)
+        {
+            foreach (var point in points)
+                if (startIndex >= point.Start && startIndex <= point.End)
+                    return point;
+            throw new ApplicationException($"Could not find markdown code block at index #{startIndex}!");
+        }
+
+        private static List<CodeBlockPoint> GetCodeBlockPoints(Word.Range commentRange, string partialMarkdownText)
+        {
+            List<CodeBlockPoint> points = new List<CodeBlockPoint>();
+            Regex regex = new Regex(RegexSyntaxFilter.CodeBlock, RegexOptions.Singleline);
+            MatchCollection matches = regex.Matches(partialMarkdownText);
+
+            int searchIndex = 0;
+            int offset = 0;
+            foreach (Match match in matches)
+            {
+                string textToFormat = match.Value;
+                string insideContent = match.Groups[1].Value;
+                searchIndex = commentRange.Start + partialMarkdownText.IndexOf(match.Value, searchIndex);
+                int length = textToFormat.Length;
+
+                points.Add(new CodeBlockPoint(searchIndex - offset, searchIndex - offset + length - 1));
+                offset += 6 + length;
+            }
+
+            return points;
         }
 
         private static void ApplyFormatting(Word.Range formatRange, int searchIndex, int offset, int length, int formatType, ref int offsetIncrement, int offsetValue, int level = 1)
@@ -329,17 +467,35 @@ namespace TextForge
 
         private static void ApplyImageFormatting(Word.Range formatRange, string imageUrl)
         {
-            using (var webClient = new System.Net.WebClient())
+            try
             {
-                byte[] imageBytes = webClient.DownloadData(imageUrl);
+                // Validate the URL
+                if (!Uri.IsWellFormedUriString(imageUrl, UriKind.Absolute))
+                {
+                    throw new ArgumentException("Invalid URL format", nameof(imageUrl));
+                }
+
+                // Download the image data
+                byte[] imageBytes = Task.Run(() => client.GetByteArrayAsync(imageUrl)).Result;
+
+                // Create a temporary file
                 string tempFilePath = System.IO.Path.GetTempFileName();
                 System.IO.File.WriteAllBytes(tempFilePath, imageBytes);
+
+                // Add the picture to the document
                 formatRange.InlineShapes.AddPicture(tempFilePath);
-                System.IO.File.Delete(tempFilePath); // Clean up the temporary file
+
+                // Clean up the temporary file
+                System.IO.File.Delete(tempFilePath);
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions (e.g., logging)
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-         private static void ApplyHeadingFormatting(Word.Range formatRange, int searchIndex, int offset, Match match, string insideContent, ref int offsetIncrement)
+        private static void ApplyHeadingFormatting(Word.Range formatRange, int searchIndex, int offset, Match match, string insideContent, ref int offsetIncrement)
         {
             formatRange.SetRange(searchIndex - offset, searchIndex - offset + match.Groups[2].Length);
             if (insideContent.Length < 1 || insideContent.Length > 6)
@@ -404,9 +560,24 @@ namespace TextForge
                 keywordRange.Font.Color = Word.WdColor.wdColorBlue;
             }
         }
+
         private static string[] GetKeywordsForLanguage(string language)
         {
-            return Keywords.TryGetValue(language.ToLower(), out var keywords) ? keywords : Array.Empty<string>();
+            return Keywords.TryGetValue(language, out var keywords) ? keywords : Array.Empty<string>();
+        }
+    }
+
+    public class CodeBlockPoint
+    {
+        public int Start { get { return _start; } }
+        public int End { get { return _end; } }
+
+        private int _start, _end;
+
+        public CodeBlockPoint(int start, int end)
+        {
+            _start = start;
+            _end = end;
         }
     }
 
