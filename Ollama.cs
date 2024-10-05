@@ -34,25 +34,17 @@ namespace TextForge
             // Create a StringContent object to send the payload
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            try
-            {
-                // Send the POST request
-                var response = await CommonUtils.client.PostAsync(fullUri.OriginalString, content);
-                response.EnsureSuccessStatusCode();
+            // Send the POST request
+            var response = await CommonUtils.client.PostAsync(fullUri.OriginalString, content);
+            response.EnsureSuccessStatusCode();
 
-                // Read the response content as a string
-                var responseString = await response.Content.ReadAsStringAsync();
+            // Read the response content as a string
+            var responseString = await response.Content.ReadAsStringAsync();
 
-                // Deserialize the JSON response into a Dictionary
-                var responseData = JsonSerializer.Deserialize<Dictionary<string, object>>(responseString);
+            // Deserialize the JSON response into a Dictionary
+            var responseData = JsonSerializer.Deserialize<Dictionary<string, object>>(responseString);
 
-                return responseData;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-                return null;
-            }
+            return responseData;
         }
     }
 }
