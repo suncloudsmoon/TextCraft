@@ -130,8 +130,8 @@
   -->
   <ItemGroup>
     <Reference Include="Accessibility" />
-    <Reference Include="HyperVectorDB, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\HyperVectorDB-APIFixes.1.0.5\lib\net481\HyperVectorDB.dll</HintPath>
+    <Reference Include="HyperVectorDB, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\HyperVectorDB-APIFixes.1.0.6\lib\net481\HyperVectorDB.dll</HintPath>
     </Reference>
     <Reference Include="MessagePack, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b4a0369545f0a1be, processorArchitecture=MSIL">
       <HintPath>packages\MessagePack.3.0.134-beta\lib\net472\MessagePack.dll</HintPath>
@@ -148,19 +148,20 @@
     <Reference Include="Microsoft.NET.StringTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.NET.StringTools.17.11.4\lib\net472\Microsoft.NET.StringTools.dll</HintPath>
     </Reference>
-    <Reference Include="OpenAI, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b4187f3e65366280, processorArchitecture=MSIL">
-      <HintPath>packages\OpenAI.2.0.0-beta.12\lib\netstandard2.0\OpenAI.dll</HintPath>
+    <Reference Include="OpenAI, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b4187f3e65366280, processorArchitecture=MSIL">
+      <HintPath>packages\OpenAI.2.1.0-beta.1\lib\netstandard2.0\OpenAI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
-    <Reference Include="System.ClientModel, Version=1.1.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>packages\System.ClientModel.1.1.0\lib\netstandard2.0\System.ClientModel.dll</HintPath>
+    <Reference Include="System.ClientModel, Version=1.2.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>packages\System.ClientModel.1.2.0\lib\netstandard2.0\System.ClientModel.dll</HintPath>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Collections.Immutable.9.0.0-rc.1.24431.7\lib\net462\System.Collections.Immutable.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Diagnostics.DiagnosticSource.9.0.0-rc.1.24431.7\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
@@ -202,25 +203,25 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="UglyToad.PdfPig, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.Core, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.Core.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.Core.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.DocumentLayoutAnalysis, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.DocumentLayoutAnalysis.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.DocumentLayoutAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.Fonts, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.Fonts.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.Fonts.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.Package, Version=0.1.8.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.Package.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.Package.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.Tokenization, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.Tokenization.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.Tokenization.dll</HintPath>
     </Reference>
     <Reference Include="UglyToad.PdfPig.Tokens, Version=0.1.9.0, Culture=neutral, PublicKeyToken=605d367334e74123, processorArchitecture=MSIL">
-      <HintPath>packages\PdfPig.0.1.9-alpha-20240910-4845f\lib\net471\UglyToad.PdfPig.Tokens.dll</HintPath>
+      <HintPath>packages\PdfPig.0.1.9-alpha-20240930-eb9a1\lib\net471\UglyToad.PdfPig.Tokens.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -319,6 +320,7 @@
       <DependentUpon>GenerateUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="ModelProperties.cs" />
+    <Compile Include="Ollama.cs" />
     <Compile Include="PasswordPrompt.cs">
       <SubType>Form</SubType>
     </Compile>

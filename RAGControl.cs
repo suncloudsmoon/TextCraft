@@ -31,7 +31,7 @@ namespace TextForge
         private HyperVectorDB.HyperVectorDB _db;
         private bool _isIndexing;
         private readonly object progressBarLock = new object();
-
+        
         public RAGControl()
         {
             try

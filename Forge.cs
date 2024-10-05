@@ -25,6 +25,8 @@ namespace TextForge
 
         private CustomTaskPane _generateTaskPane;
         private CustomTaskPane _ragControlTaskPane;
+        
+        private static readonly object door = new object();
 
         private void Forge_Load(object sender, RibbonUIEventArgs e)
         {
@@ -33,11 +35,11 @@ namespace TextForge
                 if (!ThisAddIn.IsAddinInitialized)
                     ThisAddIn.InitializeAddin();
 
-                List<string> models = new List<string>(ThisAddIn.ModelList);
+                List<string> modelList = new List<string>(ModelProperties.GetModelList(ThisAddIn.ModelList));
 
                 // Remove embedding models from the list
-                RemoveEmbeddingModels(ref models);
-                AddEmbeddingModelsToDropDownList(models);
+                modelList = RemoveEmbeddingModels(modelList).ToList();
+                AddEmbeddingModelsToDropDownList(modelList);
 
                 _box = new AboutBox();
                 _optionsBox = this.OptionsGroup;
@@ -50,33 +52,29 @@ namespace TextForge
             }
         }
 
-        private void RemoveEmbeddingModels(ref List<string> modelList)
+        private IEnumerable<string> RemoveEmbeddingModels(IEnumerable<string> modelList)
         {
-            var copyList = new List<string>(modelList);
-            foreach (var model in copyList)
-            {
-                foreach (var item in ModelProperties.UniqueEmbedModels)
-                    if (model.Contains(item))
-                        modelList.Remove(model);
-                if (model.Contains("embed"))
-                    modelList.Remove(model);
-            }
+            return modelList
+                .Where(model => !ModelProperties.UniqueEmbedModels.Any(item => model.Contains(item)) && !model.Contains("embed"))
+                .ToList();
         }
 
-        private void AddEmbeddingModelsToDropDownList(List<string> models)
+        private void AddEmbeddingModelsToDropDownList(IEnumerable<string> models)
         {
             var ribbonFactory = Globals.Factory.GetRibbonFactory();
-            foreach (string model in models)
+            var sortedModels = models.OrderBy(m => m).ToList();
+            foreach (string model in sortedModels)
             {
-                var newItem = ribbonFactory.CreateRibbonDropDownItem();
-                newItem.Label = model;
-
-                ModelListDropDown.Items.Add(newItem);
-
-                if (model == ThisAddIn.Model)
                 {
-                    ModelListDropDown.SelectedItem = newItem;
-                    UpdateCheckbox();
+                    var newItem = ribbonFactory.CreateRibbonDropDownItem();
+                    newItem.Label = model;
+                    ModelListDropDown.Items.Add(newItem);
+
+                    if (model == ThisAddIn.Model)
+                    {
+                        ModelListDropDown.SelectedItem = newItem;
+                        UpdateCheckbox();
+                    }
                 }
             }
         }
@@ -92,13 +90,16 @@ namespace TextForge
             }
         }
 
-        private void ModelListDropDown_SelectionChanged(object sender, RibbonControlEventArgs e)
+        private async void ModelListDropDown_SelectionChanged(object sender, RibbonControlEventArgs e)
         {
             try
             {
-                ThisAddIn.Model = GetSelectedItemLabel();
-                ThisAddIn.ContextLength = ModelProperties.GetContextLength(ThisAddIn.Model);
-                UpdateCheckbox();
+                await Task.Run(() =>
+                {
+                    ThisAddIn.Model = GetSelectedItemLabel();
+                    ThisAddIn.ContextLength = ModelProperties.GetContextLength(ThisAddIn.Model, ThisAddIn.ModelList);
+                    UpdateCheckbox();
+                });
             }
             catch (Exception ex)
             {

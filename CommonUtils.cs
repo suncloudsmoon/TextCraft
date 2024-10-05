@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Word;
 using Word = Microsoft.Office.Interop.Word;
@@ -8,6 +9,8 @@ namespace TextForge
 {
     internal class CommonUtils
     {
+        public static readonly HttpClient client = new HttpClient();
+
         public static void DisplayError(Exception ex)
         {
             MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButtons.OK, MessageBoxIcon.Error);

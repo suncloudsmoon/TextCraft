@@ -10,8 +10,6 @@ namespace TextForge
 {
     internal class WordMarkdown
     {
-        private static readonly HttpClient client = new HttpClient();
-
         private static readonly Dictionary<string, string[]> Keywords = new Dictionary<string, string[]>
         {
             ["python"] = new[]
@@ -476,7 +474,7 @@ namespace TextForge
                 }
 
                 // Download the image data
-                byte[] imageBytes = Task.Run(() => client.GetByteArrayAsync(imageUrl)).Result;
+                byte[] imageBytes = Task.Run(() => CommonUtils.client.GetByteArrayAsync(imageUrl)).Result;
 
                 // Create a temporary file
                 string tempFilePath = System.IO.Path.GetTempFileName();

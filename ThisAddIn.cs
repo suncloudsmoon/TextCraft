@@ -1,11 +1,12 @@
 ﻿using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using HyperVectorDB.Embedder;
 using OpenAI;
 using OpenAI.Models;
-using System.ClientModel;
 using Word = Microsoft.Office.Interop.Word;
 
 namespace TextForge
@@ -23,7 +24,7 @@ namespace TextForge
         public static RAGControl RagControl { get { return _ragControl; } }
         public static CancellationTokenSource CancellationTokenSource { get { return _cancellationTokenSource; } set { _cancellationTokenSource = value; } }
         public static bool IsAddinInitialized { get { return _isAddinInitialized; } set { _isAddinInitialized = value; } }
-        public static IEnumerable<string> ModelList { get { return _modelList; } }
+        public static OpenAIModelCollection ModelList { get { return _modelList; } }
 
         // Private
         private static string _openAIEndpoint = "http://localhost:11434/v1"; // Ollama endpoint
@@ -36,7 +37,7 @@ namespace TextForge
         private static CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private static RAGControl _ragControl;
         private static bool _isAddinInitialized = false;
-        private static IEnumerable<string> _modelList;
+        private static OpenAIModelCollection _modelList;
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
@@ -84,40 +85,29 @@ namespace TextForge
             {
                 Endpoint = new Uri(_openAIEndpoint),
                 ProjectId = "Operation Clippy",
-                ApplicationId = "TextCraft"
+                UserAgentApplicationId = "TextCraft"
             };
-            ModelClient modelRetriever = new ModelClient(new ApiKeyCredential(_apiKey), _clientOptions);
-            _modelList = ModelProperties.GetModelList(modelRetriever); // caching the response
+            OpenAIModelClient modelRetriever = new OpenAIModelClient(new ApiKeyCredential(_apiKey), _clientOptions);
+            _modelList = modelRetriever.GetModels().Value;
 
             string defaultModel = Properties.Settings.Default.DefaultModel;
-            _model = _modelList.Contains(defaultModel) ? defaultModel : _modelList.First();
-            _contextLength = ModelProperties.GetContextLength(_model);
+            _model = _modelList.Any(model => model.Id == defaultModel) ? defaultModel : _modelList.First().Id;
+            _contextLength = ModelProperties.GetContextLength(_model, _modelList);
 
             // Set embed model
             SetEmbedModelAutomatically();
         }
 
-        private static void SetEmbedModelAutomatically() {
+        private static void SetEmbedModelAutomatically()
+        {
             if (string.IsNullOrEmpty(_embedModel))
             {
-                foreach (var model in _modelList)
-                {
-                    if (model.Contains("embed"))
-                    {
-                        _embedModel = model;
-                        break;
-                    } else
-                    {
-                        foreach (var item in ModelProperties.UniqueEmbedModels)
-                        {
-                            if (model.Contains(item))
-                            {
-                                _embedModel = model;
-                                break;
-                            }
-                        }
-                    }
-                }
+                // Use LINQ to find the first model that meets the condition
+                _embedModel = _modelList.FirstOrDefault(model =>
+                    model.Id.Contains("embed") || ModelProperties.UniqueEmbedModels.Any(item => model.Id.Contains(item))
+                )?.Id;
+
+                // If no model was found, throw an exception
                 if (string.IsNullOrEmpty(_embedModel))
                     throw new ArgumentException("Embed model is not installed on the computer!");
             }
