@@ -390,8 +390,10 @@ namespace TextForge
         }
 
         // UTILS
-        public static AsyncCollectionResult<StreamingChatCompletionUpdate> AskQuestion(SystemChatMessage systemPrompt, IEnumerable<ChatMessage> messages, Word.Range context)
+        public static AsyncCollectionResult<StreamingChatCompletionUpdate> AskQuestion(SystemChatMessage systemPrompt, IEnumerable<ChatMessage> messages, Word.Range context, Word.Document doc = null)
         {
+            if (doc == null)
+                doc = context.Document;
             string document = context.Text;
             int userPromptLen = GetUserPromptLen(messages);
             ChatMessage lastUserPrompt = messages.Last();
@@ -406,7 +408,7 @@ namespace TextForge
                 document = RAGControl.GetWordDocumentAsRAG(lastUserPrompt.Content[0].Text, context);
 
             string ragQuery =
-                (constraints["rag_context"] == 0f) ? string.Empty : ThisAddIn.AllTaskPanes[Globals.ThisAddIn.Application.ActiveDocument].Item3.GetRAGContext(lastUserPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * constraints["rag_context"]));
+                (constraints["rag_context"] == 0f) ? string.Empty : ThisAddIn.AllTaskPanes[doc].Item3.GetRAGContext(lastUserPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * constraints["rag_context"]));
 
             List<ChatMessage> chatHistory = new List<ChatMessage>()
             {

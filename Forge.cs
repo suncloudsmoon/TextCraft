@@ -223,11 +223,12 @@ namespace TextForge
             }
             else
             {
+                Word.Document document = CommonUtils.GetActiveDocument(); // Hash code of the active document gets changed after each comment!
                 foreach (Word.Paragraph p in paragraphs)
                     // It isn't a paragraph if it doesn't contain a full stop.
                     if (p.Range.Text.Contains('.'))
                     {
-                        await CommentHandler.AddComment(CommonUtils.GetComments(), p.Range, Review(paragraphs, p.Range, prompt));
+                        await CommentHandler.AddComment(CommonUtils.GetComments(), p.Range, Review(paragraphs, p.Range, prompt, document));
                         hasCommented = true;
                     }
             }
@@ -303,7 +304,7 @@ namespace TextForge
             DefaultCheckBox.Checked = (Properties.Settings.Default.DefaultModel == ThisAddIn.Model);
         }
 
-        private static AsyncCollectionResult<StreamingChatCompletionUpdate> Review(Word.Paragraphs context, Word.Range p, string prompt)
+        private static AsyncCollectionResult<StreamingChatCompletionUpdate> Review(Word.Paragraphs context, Word.Range p, string prompt, Word.Document doc = null)
         {
             var docRange = Globals.ThisAddIn.Application.ActiveDocument.Range();
             List<UserChatMessage> userChat = new List<UserChatMessage>()
@@ -311,7 +312,7 @@ namespace TextForge
                 new UserChatMessage($@"Please review the following paragraph extracted from the Document: ""{CommonUtils.SubstringTokens(p.Text, (int)(ThisAddIn.ContextLength * 0.2))}"""),
                 new UserChatMessage(prompt)
             };
-            return RAGControl.AskQuestion(CommentSystemPrompt, userChat, docRange);
+            return RAGControl.AskQuestion(CommentSystemPrompt, userChat, docRange, doc);
         }
     }
 }
