@@ -17,35 +17,46 @@ namespace TextForge
     public partial class Forge
     {
         // Public
+        public static readonly CultureLocalizationHelper CultureHelper = new CultureLocalizationHelper("TextForge.Forge", typeof(Forge).Assembly);
+        public static readonly object InitializeDoor = new object();
         public static readonly SystemChatMessage CommentSystemPrompt = new SystemChatMessage("You are an expert writing assistant and editor, specialized in enhancing the clarity, coherence, and impact of text within a document. You analyze text critically and provide constructive feedback to improve the overall quality.");
 
         // Private
         private AboutBox _box;
         private static RibbonGroup _optionsBox;
 
-        private CustomTaskPane _generateTaskPane;
-        private CustomTaskPane _ragControlTaskPane;
-        
-        private static readonly object door = new object();
-
         private void Forge_Load(object sender, RibbonUIEventArgs e)
         {
             try
             {
-                if (!ThisAddIn.IsAddinInitialized)
-                    ThisAddIn.InitializeAddin();
+                if (Globals.ThisAddIn.Application.Documents.Count > 0)
+                    ThisAddIn.AddTaskPanes(Globals.ThisAddIn.Application.ActiveDocument);
 
-                List<string> modelList = new List<string>(ModelProperties.GetModelList(ThisAddIn.ModelList));
+                Thread startup = new Thread(InitializeForge);
+                startup.SetApartmentState(ApartmentState.STA);
+                startup.Start();
+            } catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
+        }
 
-                // Remove embedding models from the list
-                modelList = RemoveEmbeddingModels(modelList).ToList();
-                AddEmbeddingModelsToDropDownList(modelList);
+        private void InitializeForge() {
+            try
+            {
+                lock (InitializeDoor)
+                {
+                    if (!ThisAddIn.IsAddinInitialized)
+                        ThisAddIn.InitializeAddIn();
 
+                    List<string> modelList = new List<string>(ModelProperties.GetModelList(ThisAddIn.ModelList));
+
+                    // Remove embedding models from the list
+                    modelList = RemoveEmbeddingModels(modelList).ToList();
+                    AddEmbeddingModelsToDropDownList(modelList);
+                }
                 _box = new AboutBox();
                 _optionsBox = this.OptionsGroup;
-
-                _generateTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(new GenerateUserControl(), this.GenerateButton.Label);
-                _ragControlTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(ThisAddIn.RagControl, this.RAGControlButton.Label);
             } catch (Exception ex)
             {
                 CommonUtils.DisplayError(ex);
@@ -79,17 +90,6 @@ namespace TextForge
             }
         }
 
-        private void GenerateButton_Click(object sender, RibbonControlEventArgs e)
-        {
-            try
-            {
-                _generateTaskPane.Visible = !_generateTaskPane.Visible;
-            } catch (Exception ex)
-            {
-                CommonUtils.DisplayError(ex);
-            }
-        }
-
         private async void ModelListDropDown_SelectionChanged(object sender, RibbonControlEventArgs e)
         {
             try
@@ -97,8 +97,8 @@ namespace TextForge
                 await Task.Run(() =>
                 {
                     ThisAddIn.Model = GetSelectedItemLabel();
-                    ThisAddIn.ContextLength = ModelProperties.GetContextLength(ThisAddIn.Model, ThisAddIn.ModelList);
                     UpdateCheckbox();
+                    ThisAddIn.ContextLength = ModelProperties.GetContextLength(ThisAddIn.Model, ThisAddIn.ModelList); // this request is slow
                 });
             }
             catch (Exception ex)
@@ -106,6 +106,7 @@ namespace TextForge
                 CommonUtils.DisplayError(ex);
             }
         }
+
         private void DefaultCheckBox_Click(object sender, RibbonControlEventArgs e)
         {
             try
@@ -126,11 +127,25 @@ namespace TextForge
             return ModelListDropDown.SelectedItem.Label;
         }
 
+        private void GenerateButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            try
+            {
+                var taskpanes = ThisAddIn.AllTaskPanes[Globals.ThisAddIn.Application.ActiveDocument];
+                taskpanes.Item1.Visible = !taskpanes.Item1.Visible;
+            }
+            catch (Exception ex)
+            {
+                CommonUtils.DisplayError(ex);
+            }
+        }
+
         private void RAGControlButton_Click(object sender, RibbonControlEventArgs e)
         {
             try
             {
-                _ragControlTaskPane.Visible = !_ragControlTaskPane.Visible;
+                var taskpanes = ThisAddIn.AllTaskPanes[Globals.ThisAddIn.Application.ActiveDocument];
+                taskpanes.Item2.Visible = !taskpanes.Item2.Visible;
             }
             catch (Exception ex)
             {
@@ -179,7 +194,7 @@ namespace TextForge
                         await RewriteButton_Click();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("Invalid button name!");
+                        throw new ArgumentOutOfRangeException(CultureHelper.GetLocalizedString("[WritingToolsGallery_ButtonClick] ArgumentOutOfRangeException #1"));
                 }
             }
             catch (Exception ex)
@@ -217,7 +232,7 @@ namespace TextForge
                     }
             }
             if (!hasCommented)
-                MessageBox.Show("Review complete!", "Action Completed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(CultureHelper.GetLocalizedString("[ReviewButton_Click] MessageBox #1 (text)"), CultureHelper.GetLocalizedString("[ReviewButton_Click] MessageBox #1 (caption)"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private static async Task ProofreadButton_Click()
@@ -239,7 +254,7 @@ namespace TextForge
         private static async Task AnalyzeText(string systemPrompt, string userPrompt)
         {
             var selectionRange = Globals.ThisAddIn.Application.Selection.Range;
-            var range = (selectionRange.End - selectionRange.Start > 0) ? selectionRange : throw new InvalidRangeException("No text is selected for analysis!");
+            var range = (selectionRange.End - selectionRange.Start > 0) ? selectionRange : throw new InvalidRangeException(CultureHelper.GetLocalizedString("[AnalyzeText] InvalidRangeException #1"));
             
             ChatClient client = new ChatClient(ThisAddIn.Model, new ApiKeyCredential(ThisAddIn.ApiKey), ThisAddIn.ClientOptions);
             var streamingAnswer = client.CompleteChatStreamingAsync(

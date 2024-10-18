@@ -1,4 +1,6 @@
-﻿namespace TextForge
+﻿using System.Globalization;
+
+namespace TextForge
 {
     partial class Forge : Microsoft.Office.Tools.Ribbon.RibbonBase
     {
@@ -11,7 +13,39 @@
             : base(Globals.Factory.GetRibbonFactory())
         {
             InitializeComponent();
+            Localize();
         }
+
+        private void Localize()
+        {
+            CultureLocalizationHelper helper = new CultureLocalizationHelper("TextForge.Forge", typeof(Forge).Assembly);
+            this.AboutButton.Label = helper.GetLocalizedString("this.AboutButton.Label");
+            this.AboutButton.ScreenTip = helper.GetLocalizedString("this.AboutButton.ScreenTip");
+            this.CancelButton.Label = helper.GetLocalizedString("this.CancelButton.Label");
+            this.CancelButton.ScreenTip = helper.GetLocalizedString("this.CancelButton.ScreenTip");
+            this.DefaultCheckBox.Label = helper.GetLocalizedString("this.DefaultCheckBox.Label");
+            this.DefaultCheckBox.SuperTip = helper.GetLocalizedString("this.DefaultCheckBox.SuperTip");
+            this.ForgeTab.Label = helper.GetLocalizedString("this.ForgeTab.Label");
+            this.GenerateButton.Label = helper.GetLocalizedString("this.GenerateButton.Label");
+            this.GenerateButton.SuperTip = helper.GetLocalizedString("this.GenerateButton.SuperTip");
+            this.InfoGroup.Label = helper.GetLocalizedString("this.InfoGroup.Label");
+            this.ModelListDropDown.Label = helper.GetLocalizedString("this.ModelListDropDown.Label");
+            this.ModelListDropDown.SuperTip = helper.GetLocalizedString("this.ModelListDropDown.SuperTip");
+            this.OptionsGroup.Label = helper.GetLocalizedString("this.OptionsGroup.Label");
+            this.ProofreadButton.Label = helper.GetLocalizedString("this.ProofreadButton.Label");
+            this.ProofreadButton.SuperTip = helper.GetLocalizedString("this.ProofreadButton.SuperTip");
+            this.RAGControlButton.Label = helper.GetLocalizedString("this.RAGControlButton.Label");
+            this.RAGControlButton.SuperTip = helper.GetLocalizedString("this.RAGControlButton.SuperTip");
+            this.ReviewButton.Label = helper.GetLocalizedString("this.ReviewButton.Label");
+            this.ReviewButton.SuperTip = helper.GetLocalizedString("this.ReviewButton.SuperTip");
+            this.RewriteButton.Label = helper.GetLocalizedString("this.RewriteButton.Label");
+            this.RewriteButton.SuperTip = helper.GetLocalizedString("this.RewriteButton.SuperTip");
+            this.SettingsGroup.Label = helper.GetLocalizedString("this.SettingsGroup.Label");
+            this.ToolsGroup.Label = helper.GetLocalizedString("this.ToolsGroup.Label");
+            this.WritingToolsGallery.Label = helper.GetLocalizedString("this.WritingToolsGallery.Label");
+            this.WritingToolsGallery.SuperTip = helper.GetLocalizedString("this.WritingToolsGallery.SuperTip");
+        }
+
 
         /// <summary> 
         /// Clean up any resources being used.
@@ -83,7 +117,8 @@
             this.GenerateButton.Label = "Generate";
             this.GenerateButton.Name = "GenerateButton";
             this.GenerateButton.ShowImage = true;
-            this.GenerateButton.SuperTip = "Generates an answer based on user prompt and context from the current document.";
+            this.GenerateButton.SuperTip = "Creates tailored responses using the user\'s prompt and the current document\'s con" +
+    "tent.";
             this.GenerateButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.GenerateButton_Click);
             // 
             // separator3
@@ -109,7 +144,7 @@
             this.ReviewButton.Label = "Review";
             this.ReviewButton.Name = "ReviewButton";
             this.ReviewButton.ShowImage = true;
-            this.ReviewButton.SuperTip = "Add comments and suggestions to improve your document.";
+            this.ReviewButton.SuperTip = "Enhance your document with AI-driven comments and suggestions.";
             // 
             // ProofreadButton
             // 
@@ -143,7 +178,7 @@
             this.RAGControlButton.Label = "RAG Control";
             this.RAGControlButton.Name = "RAGControlButton";
             this.RAGControlButton.ShowImage = true;
-            this.RAGControlButton.SuperTip = "Add/Remove files from the Retrieval Augmentation Generation (RAG) system.";
+            this.RAGControlButton.SuperTip = "Manage files within the Retrieval Augmentation Generation (RAG) system.";
             this.RAGControlButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.RAGControlButton_Click);
             // 
             // separator2
@@ -163,7 +198,7 @@
             // 
             this.DefaultCheckBox.Label = "Default";
             this.DefaultCheckBox.Name = "DefaultCheckBox";
-            this.DefaultCheckBox.SuperTip = "Sets the default language model for use in TextCraft.";
+            this.DefaultCheckBox.SuperTip = "Set the default language model for TextCraft.";
             this.DefaultCheckBox.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.DefaultCheckBox_Click);
             // 
             // InfoGroup
@@ -178,7 +213,7 @@
             this.AboutButton.Image = global::TextForge.Properties.Resources.information_high_contrast;
             this.AboutButton.Label = "About";
             this.AboutButton.Name = "AboutButton";
-            this.AboutButton.ScreenTip = "Contains information about this application.";
+            this.AboutButton.ScreenTip = "Provides details about this application.";
             this.AboutButton.ShowImage = true;
             this.AboutButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.AboutButton_Click);
             // 
@@ -195,7 +230,7 @@
             this.CancelButton.Image = global::TextForge.Properties.Resources.stop_sign_flat;
             this.CancelButton.Label = "Cancel";
             this.CancelButton.Name = "CancelButton";
-            this.CancelButton.ScreenTip = "Stops the text generation process.";
+            this.CancelButton.ScreenTip = "Halts the text generation process.";
             this.CancelButton.ShowImage = true;
             this.CancelButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.CancelButton_Click);
             // 

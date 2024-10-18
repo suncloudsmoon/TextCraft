@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Nodes;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using OpenAI.Models;
-using System.Diagnostics;
 
 namespace TextForge
 {
@@ -33,6 +32,8 @@ namespace TextForge
         private static bool IsOllamaEndpoint = false;
         private static bool IsOllamaFetched = false;
         private static Dictionary<string, int> ollamaContextWindowCache = new Dictionary<string, int>();
+        private static readonly CultureLocalizationHelper _cultureHelper = new CultureLocalizationHelper("TextForge.Forge", typeof(Forge).Assembly);
+
 
         public static int GetContextLength(string modelName, OpenAIModelCollection availableModels)
         {
@@ -126,7 +127,8 @@ namespace TextForge
                     }
                 }
             }
-            throw new OllamaMissingContextWindowException($"Unable to fetch the context length for {model}!");
+            
+            throw new OllamaMissingContextWindowException(string.Format(_cultureHelper.GetLocalizedString("(ModelProperties.cs) [GetContextLength] OllamaMissingContextWindowException #1"), model));
         }
     }
 

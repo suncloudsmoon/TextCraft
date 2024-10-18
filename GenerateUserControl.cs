@@ -8,6 +8,8 @@ namespace TextForge
     public partial class GenerateUserControl : UserControl
     {
         private readonly SystemChatMessage _systemPrompt = new SystemChatMessage("You are an AI assistant designed to help users create content based on existing documents. Your task is to understand the user’s query and the context provided by the existing document, and then generate relevant and coherent content. Ensure that the content is accurate, well-structured, and aligns with the user’s requirements.");
+        private readonly CultureLocalizationHelper _cultureHelper = new CultureLocalizationHelper("TextForge.GenerateUserControl", typeof(GenerateUserControl).Assembly);
+
         public GenerateUserControl()
         {
             try
@@ -25,8 +27,7 @@ namespace TextForge
             {
                 string textBoxContent = this.PromptTextBox.Text;
                 if (textBoxContent.Length == 0)
-                    throw new TextBoxEmptyException("The textbox is empty!");
-
+                    throw new TextBoxEmptyException(_cultureHelper.GetLocalizedString("[GenerateButton_Click] TextBoxEmptyException #1"));
                 /*
                  * So, If the user changes the selection carot in Word after clicking "generate" (bc it takes so long to generate text).
                  * Then, it won't affect where the text is placed.

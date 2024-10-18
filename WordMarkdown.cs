@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text.RegularExpressions;
 using Task = System.Threading.Tasks.Task;
 using Word = Microsoft.Office.Interop.Word;
@@ -126,6 +124,8 @@ namespace TextForge
         private static string RemoveLinkMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.Link, "$1");
         private static string RemoveBoldItalicMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.BoldItalic, "$1$2", RegexOptions.Multiline);
         private static string RemoveImageMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.Image, string.Empty, RegexOptions.Multiline);
+        private static string RemoveInlineMathMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.InlineMath, "$1");
+        private static string RemoveDisplayMathMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.DisplayMath, "$1");
         private static string RemoveAlternateHeadingMarkdownSyntax(string markdownText) => Regex.Replace(markdownText, RegexSyntaxFilter.AlternateHeading, "$1", RegexOptions.Multiline);
 
         public static string RemoveMarkdownSyntax(string markdownText)
@@ -150,7 +150,9 @@ namespace TextForge
                 RemoveHorizontalRuleMarkdownSyntax,
                 RemoveImageMarkdownSyntax,
                 RemoveAlternateHeadingMarkdownSyntax,
-                RemoveLinkMarkdownSyntax
+                RemoveLinkMarkdownSyntax,
+                RemoveDisplayMathMarkdownSyntax,
+                RemoveInlineMathMarkdownSyntax,
             };
 
             // Apply each removal function to the text, except for code blocks
@@ -207,22 +209,24 @@ namespace TextForge
         private static string RemoveAllMarkdownSyntaxExcept(RegexSyntaxFilter.Number num, string markdownText)
         {
             // Dictionary mapping each Markdown syntax type to its corresponding removal function
-            var syntaxRemovers = new Dictionary<RegexSyntaxFilter.Number, Action<string>>
+            var syntaxRemovers = new Dictionary<RegexSyntaxFilter.Number, Func<string, string>>
             {
-                { RegexSyntaxFilter.Number.Bold, text => markdownText = RemoveBoldMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.Italic, text => markdownText = RemoveItalicMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.Underline, text => markdownText = RemoveUnderlineMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.StrikeThrough, text => markdownText = RemoveStrikeThroughMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.BlockQuote, text => markdownText = RemoveBlockQuoteMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.Heading, text => markdownText = RemoveHeadingMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.UnorderedList, text => markdownText = RemoveUnorderedListMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.HorizontalRule, text => markdownText = RemoveHorizontalRuleMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.CodeBlock, text => markdownText = RemoveCodeBlockMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.InlineCode, text => markdownText = RemoveInlineCodeMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.BoldItalic, text => markdownText = RemoveBoldItalicMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.Image, text => markdownText = RemoveImageMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.AlternateHeading, text => markdownText = RemoveAlternateHeadingMarkdownSyntax(text) },
-                { RegexSyntaxFilter.Number.Link, text => markdownText = RemoveLinkMarkdownSyntax(text) },
+                { RegexSyntaxFilter.Number.Bold, RemoveBoldMarkdownSyntax },
+                { RegexSyntaxFilter.Number.Italic, RemoveItalicMarkdownSyntax },
+                { RegexSyntaxFilter.Number.Underline, RemoveUnderlineMarkdownSyntax },
+                { RegexSyntaxFilter.Number.StrikeThrough, RemoveStrikeThroughMarkdownSyntax },
+                { RegexSyntaxFilter.Number.BlockQuote, RemoveBlockQuoteMarkdownSyntax },
+                { RegexSyntaxFilter.Number.Heading, RemoveHeadingMarkdownSyntax },
+                { RegexSyntaxFilter.Number.UnorderedList, RemoveUnorderedListMarkdownSyntax },
+                { RegexSyntaxFilter.Number.HorizontalRule, RemoveHorizontalRuleMarkdownSyntax },
+                { RegexSyntaxFilter.Number.CodeBlock, RemoveCodeBlockMarkdownSyntax },
+                { RegexSyntaxFilter.Number.InlineCode, RemoveInlineCodeMarkdownSyntax },
+                { RegexSyntaxFilter.Number.BoldItalic, RemoveBoldItalicMarkdownSyntax },
+                { RegexSyntaxFilter.Number.Image, RemoveImageMarkdownSyntax },
+                { RegexSyntaxFilter.Number.AlternateHeading, RemoveAlternateHeadingMarkdownSyntax },
+                { RegexSyntaxFilter.Number.Link, RemoveLinkMarkdownSyntax },
+                { RegexSyntaxFilter.Number.DisplayMath, RemoveDisplayMathMarkdownSyntax },
+                { RegexSyntaxFilter.Number.InlineMath, RemoveInlineMathMarkdownSyntax },
             };
 
             // Iterate through the dictionary and apply all removals except the one specified by 'num'
@@ -230,7 +234,7 @@ namespace TextForge
             {
                 if (remover.Key != num)
                 {
-                    remover.Value(markdownText);
+                    markdownText = remover.Value(markdownText);
                 }
             }
 
@@ -256,6 +260,8 @@ namespace TextForge
                 RegexSyntaxFilter.Number.InlineCode,
                 RegexSyntaxFilter.Number.CodeBlock,
                 RegexSyntaxFilter.Number.Image,
+                RegexSyntaxFilter.Number.DisplayMath,
+                RegexSyntaxFilter.Number.InlineMath,
                 RegexSyntaxFilter.Number.AlternateHeading,
                 RegexSyntaxFilter.Number.Link,
                 RegexSyntaxFilter.Number.OrderedList
@@ -288,8 +294,10 @@ namespace TextForge
                 RegexSyntaxFilter.Number.Link => new Regex(RegexSyntaxFilter.Link),
                 RegexSyntaxFilter.Number.BoldItalic => new Regex(RegexSyntaxFilter.BoldItalic),
                 RegexSyntaxFilter.Number.Image => new Regex(RegexSyntaxFilter.Image),
+                RegexSyntaxFilter.Number.DisplayMath => new Regex(RegexSyntaxFilter.DisplayMath),
+                RegexSyntaxFilter.Number.InlineMath => new Regex(RegexSyntaxFilter.InlineMath),
                 RegexSyntaxFilter.Number.AlternateHeading => new Regex(RegexSyntaxFilter.AlternateHeading, RegexOptions.Multiline),
-                _ => throw new ArgumentOutOfRangeException("Unknown format type for Markdown processing!"),
+                _ => throw new ArgumentOutOfRangeException(Forge.CultureHelper.GetLocalizedString("(WordMarkdown.cs) [ApplyMarkdownFormatting] ArgumentOutofRangeException #1"))
             };
 
             // Remove all Markdown syntax except the specified format type
@@ -300,19 +308,20 @@ namespace TextForge
 
             int searchIndex = 0;
             int offset = 0;
+            int codeBlockOffset = 0;
             foreach (Match match in matches)
             {
+                CodeBlockPoint codeBlockLoc;
+                if (formatType != RegexSyntaxFilter.Number.CodeBlock && IsLocatedWithinCodeBlock(codeBlockLocations, searchIndex + codeBlockOffset, out codeBlockLoc))
+                {
+                    searchIndex += codeBlockLoc.End - codeBlockLoc.InnerContentLen - searchIndex - 6 + 1;
+                    codeBlockOffset += codeBlockLoc.InnerContentLen + 6;
+                }
+
                 string textToFormat = match.Value;
                 string insideContent = match.Groups[1].Value;
                 searchIndex = commentRange.Start + partialMarkdownText.IndexOf(match.Value, searchIndex);
                 int length = textToFormat.Length;
-
-                CodeBlockPoint codeBlockLoc;
-                if (formatType != RegexSyntaxFilter.Number.CodeBlock && IsLocatedWithinCodeBlock(codeBlockLocations, searchIndex, out codeBlockLoc))
-                {
-                    searchIndex += codeBlockLoc.End - searchIndex + 1;
-                    continue;
-                }
 
                 Word.Range formatRange = commentRange.Duplicate;
                 switch (formatType)
@@ -366,12 +375,27 @@ namespace TextForge
                             ApplyImageFormatting(formatRange, imageUrl);
                         offset += length; // Adjust the offset to account for the removed text
                         break;
+                    case RegexSyntaxFilter.Number.InlineMath:
+                        ApplyMathFormatting(formatRange, searchIndex, ref offset, insideContent, 2); // Adjust the extra offset as needed
+                        break;
+                    case RegexSyntaxFilter.Number.DisplayMath:
+                        ApplyMathFormatting(formatRange, searchIndex, ref offset, insideContent, 4); // Adjust the extra offset as needed
+                        break;
                     case RegexSyntaxFilter.Number.AlternateHeading:
                         ApplyAlternateHeadingFormatting(formatRange, searchIndex, offset, match, insideContent, ref offset);
                         break;
                 }
                 searchIndex += length;
             }
+        }
+
+        // Add method to handle LaTeX equations:
+        private static void ApplyMathFormatting(Word.Range formatRange, int searchIndex, ref int offset, string insideContent, int extraOffset)
+        {
+            formatRange.SetRange(searchIndex - offset, searchIndex - offset + insideContent.Length);
+            formatRange.OMaths.Add(formatRange); // This adds the LaTeX content as a Word equation
+            formatRange.OMaths[1].BuildUp();
+            offset += extraOffset;
         }
 
         private static bool IsLocatedWithinCodeBlock(List<CodeBlockPoint> points, int startIndex, out CodeBlockPoint blockPoint)
@@ -391,7 +415,7 @@ namespace TextForge
             foreach (var point in points)
                 if (startIndex >= point.Start && startIndex <= point.End)
                     return point;
-            throw new ApplicationException($"Could not find markdown code block at index #{startIndex}!");
+            throw new ApplicationException(string.Format(Forge.CultureHelper.GetLocalizedString("(WordMarkdown.cs) [GetCodeBlockAtIndex] ApplicationException #1"), startIndex));
         }
 
         private static List<CodeBlockPoint> GetCodeBlockPoints(Word.Range commentRange, string partialMarkdownText)
@@ -409,7 +433,7 @@ namespace TextForge
                 searchIndex = commentRange.Start + partialMarkdownText.IndexOf(match.Value, searchIndex);
                 int length = textToFormat.Length;
 
-                points.Add(new CodeBlockPoint(searchIndex - offset, searchIndex - offset + length - 1));
+                points.Add(new CodeBlockPoint(searchIndex - offset, searchIndex - offset + length - 1, insideContent.Length));
                 offset += 6 + length;
             }
 
@@ -465,39 +489,31 @@ namespace TextForge
 
         private static void ApplyImageFormatting(Word.Range formatRange, string imageUrl)
         {
-            try
+            // Validate the URL
+            if (!Uri.IsWellFormedUriString(imageUrl, UriKind.Absolute))
             {
-                // Validate the URL
-                if (!Uri.IsWellFormedUriString(imageUrl, UriKind.Absolute))
-                {
-                    throw new ArgumentException("Invalid URL format", nameof(imageUrl));
-                }
-
-                // Download the image data
-                byte[] imageBytes = Task.Run(() => CommonUtils.client.GetByteArrayAsync(imageUrl)).Result;
-
-                // Create a temporary file
-                string tempFilePath = System.IO.Path.GetTempFileName();
-                System.IO.File.WriteAllBytes(tempFilePath, imageBytes);
-
-                // Add the picture to the document
-                formatRange.InlineShapes.AddPicture(tempFilePath);
-
-                // Clean up the temporary file
-                System.IO.File.Delete(tempFilePath);
+                throw new ArgumentException(Forge.CultureHelper.GetLocalizedString("(WordMarkdown.cs) [ApplyImageFormatting] ArgumentException #1"), nameof(imageUrl));
             }
-            catch (Exception ex)
-            {
-                // Handle exceptions (e.g., logging)
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Download the image data
+            byte[] imageBytes = Task.Run(() => CommonUtils.client.GetByteArrayAsync(imageUrl)).Result;
+
+            // Create a temporary file
+            string tempFilePath = System.IO.Path.GetTempFileName();
+            System.IO.File.WriteAllBytes(tempFilePath, imageBytes);
+
+            // Add the picture to the document
+            formatRange.InlineShapes.AddPicture(tempFilePath);
+
+            // Clean up the temporary file
+            System.IO.File.Delete(tempFilePath);
         }
 
         private static void ApplyHeadingFormatting(Word.Range formatRange, int searchIndex, int offset, Match match, string insideContent, ref int offsetIncrement)
         {
             formatRange.SetRange(searchIndex - offset, searchIndex - offset + match.Groups[2].Length);
             if (insideContent.Length < 1 || insideContent.Length > 6)
-                throw new ArgumentException("The number of # (markdown heading) is not valid!");
+                throw new ArgumentException(Forge.CultureHelper.GetLocalizedString("(WordMarkdown.cs) [ApplyHeadingFormatting] ArgumentException #1"));
             formatRange.set_Style($"Heading {insideContent.Length}");
             offsetIncrement += insideContent.Length + 1;
         }
@@ -569,13 +585,15 @@ namespace TextForge
     {
         public int Start { get { return _start; } }
         public int End { get { return _end; } }
+        public int InnerContentLen { get { return _innercontentlen; } }
 
-        private int _start, _end;
+        private int _start, _end, _innercontentlen;
 
-        public CodeBlockPoint(int start, int end)
+        public CodeBlockPoint(int start, int end, int innercontentlen)
         {
             _start = start;
             _end = end;
+            _innercontentlen = innercontentlen;
         }
     }
 
@@ -583,7 +601,7 @@ namespace TextForge
     {
         public enum Number
         {
-            Bold, Italic, Underline, StrikeThrough, BlockQuote, HorizontalRule, InlineCode, CodeBlock, Link, Heading, UnorderedList, OrderedList, BoldItalic, Image, AlternateHeading
+            Bold, Italic, Underline, StrikeThrough, BlockQuote, HorizontalRule, InlineCode, CodeBlock, Link, Heading, UnorderedList, OrderedList, BoldItalic, Image, InlineMath, DisplayMath, AlternateHeading
         }
 
         public const string Bold = @"\*\*(.*?)\*\*|__(.*?)__";
@@ -603,6 +621,8 @@ namespace TextForge
         public const string InlineCode = @"(?<!`)`([^`]*)`(?!`)";
         public const string CodeBlock = @"```(\w+)?\s*([\s\S]*?)```";
         public const string Image = @"!\[(.*?)\]\((.*?)\)";
+        public const string DisplayMath = @"\$\$(.*?)\$\$";
+        public const string InlineMath = @"(?<!\$)\$((?!\$).*?)\$(?!\$)";
 
         public const string AlternateHeading = @"^(?!.*(?:-{3,}|_{3,}|\*{3,})\s*$)(.*)\n(=+)$";
     }

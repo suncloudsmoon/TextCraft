@@ -36,53 +36,33 @@
             // 
             // PasswordTextBox
             // 
-            this.PasswordTextBox.AccessibleDescription = "Enter your password for the PDF file here.";
-            this.PasswordTextBox.Location = new System.Drawing.Point(12, 36);
+            resources.ApplyResources(this.PasswordTextBox, "PasswordTextBox");
             this.PasswordTextBox.Name = "PasswordTextBox";
-            this.PasswordTextBox.Size = new System.Drawing.Size(374, 26);
-            this.PasswordTextBox.TabIndex = 0;
             this.PasswordTextBox.UseSystemPasswordChar = true;
             // 
             // PasswordLabel
             // 
-            this.PasswordLabel.AccessibleDescription = "Your PDF file added to RAG Control is encrypted. Please enter your password for t" +
-    "hat PDF file to add it to the RAG Control.";
-            this.PasswordLabel.AccessibleName = "";
-            this.PasswordLabel.AutoSize = true;
-            this.PasswordLabel.Location = new System.Drawing.Point(13, 13);
+            resources.ApplyResources(this.PasswordLabel, "PasswordLabel");
             this.PasswordLabel.Name = "PasswordLabel";
-            this.PasswordLabel.Size = new System.Drawing.Size(352, 20);
-            this.PasswordLabel.TabIndex = 1;
-            this.PasswordLabel.Text = "Enter password for unlocking encrypted PDF file:";
             // 
             // OkButton
             // 
-            this.OkButton.AccessibleDescription = "Unlocks the PDF using the password entered in the input box.";
-            this.OkButton.AutoSize = true;
+            resources.ApplyResources(this.OkButton, "OkButton");
             this.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OkButton.Location = new System.Drawing.Point(297, 68);
             this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(89, 32);
-            this.OkButton.TabIndex = 2;
-            this.OkButton.Text = "Ok";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // PasswordPrompt
             // 
             this.AcceptButton = this.OkButton;
-            this.AccessibleDescription = "Enter your password for the encrypted PDF file.";
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(398, 100);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.PasswordLabel);
             this.Controls.Add(this.PasswordTextBox);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "PasswordPrompt";
-            this.Text = "Security";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -118,180 +118,64 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FileListBox.AccessibleDescription" xml:space="preserve">
-    <value>Shows the files included in the RAG context.</value>
+    <value>显示 RAG 上下文中包含的文件。</value>
   </data>
   <data name="FileListBox.AccessibleName" xml:space="preserve">
-    <value>RAG Files</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FileListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FileListBox.HorizontalScrollbar" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="FileListBox.ItemHeight" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="FileListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="FileListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 504</value>
-  </data>
-  <data name="FileListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Name" xml:space="preserve">
-    <value>FileListBox</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>RAG 文件</value>
   </data>
   <data name="RemoveButton.AccessibleDescription" xml:space="preserve">
-    <value>Removes the selected file from the list.</value>
+    <value>将选定文件从列表中删除。</value>
   </data>
   <data name="RemoveButton.AccessibleName" xml:space="preserve">
-    <value>Remove File Button</value>
+    <value>删除文件按钮</value>
   </data>
-  <data name="RemoveButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="RemoveButton.Dock" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="RemoveButton.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="RemoveButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <data name="RemoveButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 539</value>
-  </data>
-  <data name="RemoveButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 35</value>
-  </data>
-  <data name="RemoveButton.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="RemoveButton.Font" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="RemoveButton.Text" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Name" xml:space="preserve">
-    <value>RemoveButton</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>删除</value>
   </data>
   <data name="AddButton.AccessibleDescription" xml:space="preserve">
-    <value>Adds selected files to the RAG system for further processing.</value>
+    <value>将选定文件添加到 RAG 系统以进一步处理。</value>
   </data>
   <data name="AddButton.AccessibleName" xml:space="preserve">
-    <value>Add Files Button</value>
+    <value>添加文件按钮</value>
   </data>
-  <data name="AddButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="AddButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <data name="AddButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 504</value>
-  </data>
-  <data name="AddButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 35</value>
-  </data>
-  <data name="AddButton.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="AddButton.TabIndex" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="AddButton.Text" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="&gt;&gt;AddButton.Name" xml:space="preserve">
-    <value>AddButton</value>
-  </data>
-  <data name="&gt;&gt;AddButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AddButton.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;AddButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>添加</value>
   </data>
   <data name="progressBar1.AccessibleDescription" xml:space="preserve">
-    <value>Shows how much of the retrieval and generation process has been completed.</value>
+    <value>显示检索和生成过程的完成进度。</value>
   </data>
   <data name="progressBar1.AccessibleName" xml:space="preserve">
-    <value>RAG Process Progress</value>
+    <value>RAG 处理进度</value>
   </data>
-  <data name="progressBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 574</value>
-  </data>
-  <data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 23</value>
-  </data>
-  <data name="progressBar1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="progressBar1.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Name" xml:space="preserve">
-    <value>progressBar1</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="progressBar1.Location" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="$this.AccessibleDescription" xml:space="preserve">
-    <value>Can add or remove files from the RAG context.</value>
+    <value>可以在 RAG 上下文中添加或删除文件。</value>
   </data>
   <data name="$this.AccessibleName" xml:space="preserve">
-    <value>RAG Control</value>
+    <value>RAG 控制</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 20</value>
+  <data name="$this.Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 952</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>RAGControl</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;$this.Type" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="[AddButton_Click] OpenFileDialog #1 Title" xml:space="preserve">
-    <value>Select Files for RAG</value>
+    <value>选择 RAG 的文件</value>
   </data>
   <data name="[ReadPdfFileAsync] InvalidDataException #1" xml:space="preserve">
-    <value>Failed to unlock the PDF file due to an incorrect password.</value>
+    <value>因密码错误未能解锁 PDF 文件。</value>
   </data>
 </root>

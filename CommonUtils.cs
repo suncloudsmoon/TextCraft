@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http;
+using System.Resources;
 using System.Windows.Forms;
 using Microsoft.Office.Interop.Word;
 using Word = Microsoft.Office.Interop.Word;
@@ -28,7 +30,7 @@ namespace TextForge
 
         public static bool GetInternetAccessPermission(string url)
         {
-            var result = MessageBox.Show($"Do you want to allow TextCraft to access the following internet resource?{Environment.NewLine}{url}", "Internet Access", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var result = MessageBox.Show($"{Forge.CultureHelper.GetLocalizedString("[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Text")}{Environment.NewLine}{url}", Forge.CultureHelper.GetLocalizedString("[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Caption"), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             return result == DialogResult.Yes;
         }
 
@@ -93,6 +95,22 @@ namespace TextForge
             var key = Environment.GetEnvironmentVariable(variable);
             if (key != null)
                 dest = key;
+        }
+    }
+
+    public class CultureLocalizationHelper
+    {
+        private ResourceManager _resourceManager;
+
+        public CultureLocalizationHelper(string baseName, System.Reflection.Assembly assembly)
+        {
+            _resourceManager = new ResourceManager(baseName, assembly);
+        }
+
+        public string GetLocalizedString(string key, CultureInfo culture = null)
+        {
+            string localizedString = _resourceManager.GetString(key, culture);
+            return (localizedString == null) ? _resourceManager.GetString(key, CultureInfo.InvariantCulture) : localizedString;
         }
     }
 }

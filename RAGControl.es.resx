@@ -118,180 +118,82 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FileListBox.AccessibleDescription" xml:space="preserve">
-    <value>Shows the files included in the RAG context.</value>
+    <value>Muestra los archivos incluidos en el contexto RAG.</value>
   </data>
   <data name="FileListBox.AccessibleName" xml:space="preserve">
-    <value>RAG Files</value>
+    <value>Archivos RAG</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FileListBox.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="FileListBox.HorizontalScrollbar" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="FileListBox.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FileListBox.HorizontalScrollbar" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="FileListBox.ItemHeight" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="FileListBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="FileListBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 504</value>
-  </data>
-  <data name="FileListBox.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Name" xml:space="preserve">
-    <value>FileListBox</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ListBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;FileListBox.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="&gt;&gt;FileListBox.Name" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="RemoveButton.AccessibleDescription" xml:space="preserve">
-    <value>Removes the selected file from the list.</value>
+    <value>Elimina el archivo seleccionado de la lista.</value>
   </data>
   <data name="RemoveButton.AccessibleName" xml:space="preserve">
-    <value>Remove File Button</value>
+    <value>Botón Eliminar Archivo</value>
   </data>
-  <data name="RemoveButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="RemoveButton.Font" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="RemoveButton.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+  <data name="RemoveButton.Location" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="RemoveButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
+  <data name="RemoveButton.Size" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="RemoveButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 539</value>
-  </data>
-  <data name="RemoveButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 35</value>
-  </data>
-  <data name="RemoveButton.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="RemoveButton.TabIndex" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="RemoveButton.Text" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Name" xml:space="preserve">
-    <value>RemoveButton</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;RemoveButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>Eliminar</value>
   </data>
   <data name="AddButton.AccessibleDescription" xml:space="preserve">
-    <value>Adds selected files to the RAG system for further processing.</value>
+    <value>Agrega archivos seleccionados al sistema RAG para su procesamiento posterior.</value>
   </data>
   <data name="AddButton.AccessibleName" xml:space="preserve">
-    <value>Add Files Button</value>
-  </data>
-  <data name="AddButton.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
-  </data>
-  <data name="AddButton.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Microsoft Sans Serif, 10pt</value>
-  </data>
-  <data name="AddButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 504</value>
-  </data>
-  <data name="AddButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 35</value>
-  </data>
-  <data name="AddButton.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>Botón Agregar Archivos</value>
   </data>
   <data name="AddButton.Text" xml:space="preserve">
-    <value>Add</value>
+    <value>Agregar</value>
   </data>
-  <data name="&gt;&gt;AddButton.Name" xml:space="preserve">
-    <value>AddButton</value>
-  </data>
-  <data name="&gt;&gt;AddButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;AddButton.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;AddButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;AddButton.Name" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="progressBar1.AccessibleDescription" xml:space="preserve">
-    <value>Shows how much of the retrieval and generation process has been completed.</value>
+    <value>Muestra cuánto del proceso de recuperación y generación se ha completado.</value>
   </data>
   <data name="progressBar1.AccessibleName" xml:space="preserve">
-    <value>RAG Process Progress</value>
+    <value>Progreso del proceso RAG</value>
   </data>
-  <data name="progressBar1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Top</value>
+  <data name="progressBar1.Dock" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="progressBar1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 574</value>
+  <data name="progressBar1.Location" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="progressBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 23</value>
+  <data name="&gt;&gt;progressBar1.Name" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="progressBar1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="progressBar1.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Name" xml:space="preserve">
-    <value>progressBar1</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ProgressBar, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;progressBar1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="$this.Localizable" type="System.Boolean, mscorlib">
-    <value>True</value>
+  <data name="$this.Localizable" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="$this.AccessibleDescription" xml:space="preserve">
-    <value>Can add or remove files from the RAG context.</value>
+    <value>Puede agregar o eliminar archivos del contexto RAG.</value>
   </data>
   <data name="$this.AccessibleName" xml:space="preserve">
-    <value>RAG Control</value>
+    <value>Control de RAG</value>
   </data>
-  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>9, 20</value>
-  </data>
-  <data name="$this.Size" type="System.Drawing.Size, System.Drawing">
-    <value>330, 952</value>
-  </data>
-  <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>RAGControl</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.UserControl, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;$this.Name" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
   <data name="[AddButton_Click] OpenFileDialog #1 Title" xml:space="preserve">
-    <value>Select Files for RAG</value>
+    <value>Seleccionar archivos para RAG</value>
   </data>
   <data name="[ReadPdfFileAsync] InvalidDataException #1" xml:space="preserve">
-    <value>Failed to unlock the PDF file due to an incorrect password.</value>
+    <value>No se pudo desbloquear el archivo PDF debido a una contraseña incorrecta.</value>
   </data>
 </root>

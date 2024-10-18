@@ -118,114 +118,114 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="this.ForgeTab.Label" xml:space="preserve">
-    <value>Craft</value>
+    <value>生成</value>
   </data>
   <data name="this.ToolsGroup.Label" xml:space="preserve">
-    <value>Tools</value>
+    <value>工具</value>
   </data>
   <data name="this.GenerateButton.Label" xml:space="preserve">
-    <value>Generate</value>
+    <value>生成</value>
   </data>
   <data name="this.GenerateButton.SuperTip" xml:space="preserve">
-    <value>Creates tailored responses using the user's prompt and the current document's content.</value>
+    <value>根据用户的提示和当前文档的内容生成定制的响应。</value>
   </data>
   <data name="this.DefaultCheckBox.Label" xml:space="preserve">
-    <value>Default</value>
+    <value>默认</value>
   </data>
   <data name="this.AboutButton.Label" xml:space="preserve">
-    <value>About</value>
+    <value>关于</value>
   </data>
   <data name="this.AboutButton.ScreenTip" xml:space="preserve">
-    <value>Provides details about this application.</value>
+    <value>提供有关此应用程序的详细信息。</value>
   </data>
   <data name="this.CancelButton.Label" xml:space="preserve">
-    <value>Cancel</value>
+    <value>取消</value>
   </data>
   <data name="this.CancelButton.ScreenTip" xml:space="preserve">
-    <value>Halts the text generation process.</value>
+    <value>停止文本生成过程。</value>
   </data>
   <data name="this.WritingToolsGallery.Label" xml:space="preserve">
-    <value>Writing Tools</value>
+    <value>写作工具</value>
   </data>
   <data name="this.WritingToolsGallery.SuperTip" xml:space="preserve">
-    <value>Enhance your writing with AI-powered tools for grammar, style, and clarity.</value>
+    <value>使用 AI 驱动的工具提升您的写作，涵盖语法、风格和清晰度。</value>
   </data>
   <data name="this.ReviewButton.Label" xml:space="preserve">
-    <value>Review</value>
+    <value>审查</value>
   </data>
   <data name="this.ReviewButton.SuperTip" xml:space="preserve">
-    <value>Enhance your document with AI-driven comments and suggestions.</value>
+    <value>用 AI 驱动的评论和建议优化您的文档。</value>
   </data>
   <data name="this.ProofreadButton.Label" xml:space="preserve">
-    <value>Proofread</value>
+    <value>校对</value>
   </data>
   <data name="this.ProofreadButton.SuperTip" xml:space="preserve">
-    <value>Check for spelling, grammar, and style errors to polish your document.</value>
+    <value>检查拼写、语法和风格错误，以打磨您的文档。</value>
   </data>
   <data name="this.RewriteButton.Label" xml:space="preserve">
-    <value>Rewrite</value>
+    <value>重写</value>
   </data>
   <data name="this.RewriteButton.SuperTip" xml:space="preserve">
-    <value>Revise and enhance your text with AI-powered suggestions.</value>
+    <value>使用 AI 驱动的建议修改和增强您的文本。</value>
   </data>
   <data name="this.SettingsGroup.Label" xml:space="preserve">
-    <value>Settings</value>
+    <value>设置</value>
   </data>
   <data name="this.RAGControlButton.Label" xml:space="preserve">
-    <value>RAG Control</value>
+    <value>RAG 控制</value>
   </data>
   <data name="this.RAGControlButton.SuperTip" xml:space="preserve">
-    <value>Manage files within the Retrieval Augmentation Generation (RAG) system.</value>
+    <value>管理检索增强生成 (RAG) 系统中的文件。</value>
   </data>
   <data name="this.ModelListDropDown.Label" xml:space="preserve">
-    <value>Model List</value>
+    <value>模型列表</value>
   </data>
   <data name="this.ModelListDropDown.SuperTip" xml:space="preserve">
-    <value>Select a language model for use in TextCraft.</value>
+    <value>选择 TextCraft 中使用的语言模型。</value>
   </data>
   <data name="this.DefaultCheckBox.SuperTip" xml:space="preserve">
-    <value>Set the default language model for TextCraft.</value>
+    <value>设置 TextCraft 的默认语言模型。</value>
   </data>
   <data name="this.OptionsGroup.Label" xml:space="preserve">
-    <value>Options</value>
+    <value>选项</value>
   </data>
   <data name="this.InfoGroup.Label" xml:space="preserve">
-    <value>Info</value>
+    <value>信息</value>
   </data>
   <data name="(ThisAddIn.cs) [InitializeAddIn] ArgumentException #1" xml:space="preserve">
-    <value>Embed model missing. Please install it to proceed!</value>
+    <value>嵌入模型丢失。请安装以继续!</value>
   </data>
   <data name="[WritingToolsGallery_ButtonClick] ArgumentOutOfRangeException #1" xml:space="preserve">
-    <value>Selected button not recognized.</value>
+    <value>未识别所选按钮.</value>
   </data>
   <data name="[ReviewButton_Click] MessageBox #1 (text)" xml:space="preserve">
-    <value>Review complete! No comments needed for this document.</value>
+    <value>审查完成！此文档不需要任何评论。</value>
   </data>
   <data name="[ReviewButton_Click] MessageBox #1 (caption)" xml:space="preserve">
-    <value>Action Completed</value>
+    <value>操作完成!</value>
   </data>
   <data name="(ModelProperties.cs) [GetContextLength] OllamaMissingContextWindowException #1" xml:space="preserve">
-    <value>Unable to fetch the context length for {0}!</value>
+    <value>无法获取 {0} 的上下文长度！</value>
   </data>
   <data name="[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Text" xml:space="preserve">
-    <value>Do you want to allow TextCraft to access the following internet resource?</value>
+    <value>您是否希望允许 TextCraft 访问以下互联网资源？</value>
   </data>
   <data name="[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Caption" xml:space="preserve">
-    <value>Internet Access</value>
+    <value>互联网接入</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyMarkdownFormatting] ArgumentOutofRangeException #1" xml:space="preserve">
-    <value>Unknown format type for Markdown processing!</value>
+    <value>未知的 Markdown 处理格式类型!</value>
   </data>
   <data name="(WordMarkdown.cs) [GetCodeBlockAtIndex] ApplicationException #1" xml:space="preserve">
-    <value>Markdown code block not found at index {0}!</value>
+    <value>在索引 {0} 处找不到 Markdown 代码块！</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyImageFormatting] ArgumentException #1" xml:space="preserve">
-    <value>Invalid URL format</value>
+    <value>无效的 URL 格式</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyHeadingFormatting] ArgumentException #1" xml:space="preserve">
-    <value>Invalid Markdown heading: must contain 1 to 6 '#' characters.</value>
+    <value>无效的 Markdown 标题：必须包含 1 到 6 个 '#' 字符。</value>
   </data>
   <data name="[AnalyzeText] InvalidRangeException #1" xml:space="preserve">
-    <value>No text selected for analysis!</value>
+    <value>未选择要分析的文本!</value>
   </data>
 </root>

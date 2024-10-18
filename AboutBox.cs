@@ -6,14 +6,16 @@ namespace TextForge
 {
     partial class AboutBox : Form
     {
+        private static readonly CultureLocalizationHelper _cultureHelper = new CultureLocalizationHelper("TextForge.AboutBox", typeof(AboutBox).Assembly);
+
         public AboutBox()
         {
             try
             {
                 InitializeComponent();
-                this.Text = String.Format("About {0}", AssemblyTitle);
+                this.Text = $"{_cultureHelper.GetLocalizedString("[AboutBox()] this.Text")} {AssemblyTitle}";
                 this.labelProductName.Text = AssemblyProduct;
-                this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+                this.labelVersion.Text = $"{_cultureHelper.GetLocalizedString("[AboutBox()] this.labelVersion.Text")} {AssemblyVersion}";
                 this.labelCopyright.Text = AssemblyCopyright;
                 this.labelCompanyName.Text = AssemblyCompany;
                 this.LicenseTextBox.Text = Properties.Resources.THIRD_PARTY;

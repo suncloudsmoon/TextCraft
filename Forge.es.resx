@@ -118,114 +118,114 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="this.ForgeTab.Label" xml:space="preserve">
-    <value>Craft</value>
+    <value>Elaborar</value>
   </data>
   <data name="this.ToolsGroup.Label" xml:space="preserve">
-    <value>Tools</value>
+    <value>Herramientas</value>
   </data>
   <data name="this.GenerateButton.Label" xml:space="preserve">
-    <value>Generate</value>
+    <value>Generar</value>
   </data>
   <data name="this.GenerateButton.SuperTip" xml:space="preserve">
-    <value>Creates tailored responses using the user's prompt and the current document's content.</value>
+    <value>Crea respuestas personalizadas utilizando la indicación del usuario y el contenido del documento actual.</value>
   </data>
   <data name="this.DefaultCheckBox.Label" xml:space="preserve">
-    <value>Default</value>
+    <value>Predeterminado</value>
   </data>
   <data name="this.AboutButton.Label" xml:space="preserve">
-    <value>About</value>
+    <value>Acerca de</value>
   </data>
   <data name="this.AboutButton.ScreenTip" xml:space="preserve">
-    <value>Provides details about this application.</value>
+    <value>Proporciona detalles sobre esta aplicación.</value>
   </data>
   <data name="this.CancelButton.Label" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
   <data name="this.CancelButton.ScreenTip" xml:space="preserve">
-    <value>Halts the text generation process.</value>
+    <value>Detiene el proceso de generación de texto.</value>
   </data>
   <data name="this.WritingToolsGallery.Label" xml:space="preserve">
-    <value>Writing Tools</value>
+    <value>Herramientas de escritura</value>
   </data>
   <data name="this.WritingToolsGallery.SuperTip" xml:space="preserve">
-    <value>Enhance your writing with AI-powered tools for grammar, style, and clarity.</value>
+    <value>Mejora tu escritura con herramientas impulsadas por IA para gramática, estilo y claridad.</value>
   </data>
   <data name="this.ReviewButton.Label" xml:space="preserve">
-    <value>Review</value>
+    <value>Revisar</value>
   </data>
   <data name="this.ReviewButton.SuperTip" xml:space="preserve">
-    <value>Enhance your document with AI-driven comments and suggestions.</value>
+    <value>Mejora tu documento con comentarios y sugerencias impulsados por IA.</value>
   </data>
   <data name="this.ProofreadButton.Label" xml:space="preserve">
-    <value>Proofread</value>
+    <value>Corregir</value>
   </data>
   <data name="this.ProofreadButton.SuperTip" xml:space="preserve">
-    <value>Check for spelling, grammar, and style errors to polish your document.</value>
+    <value>Revisa errores de ortografía, gramática y estilo para pulir tu documento.</value>
   </data>
   <data name="this.RewriteButton.Label" xml:space="preserve">
-    <value>Rewrite</value>
+    <value>Reescribir</value>
   </data>
   <data name="this.RewriteButton.SuperTip" xml:space="preserve">
-    <value>Revise and enhance your text with AI-powered suggestions.</value>
+    <value>Revisa y mejora tu texto con sugerencias impulsadas por IA.</value>
   </data>
   <data name="this.SettingsGroup.Label" xml:space="preserve">
-    <value>Settings</value>
+    <value>Configuración</value>
   </data>
   <data name="this.RAGControlButton.Label" xml:space="preserve">
-    <value>RAG Control</value>
+    <value>Control de RAG</value>
   </data>
   <data name="this.RAGControlButton.SuperTip" xml:space="preserve">
-    <value>Manage files within the Retrieval Augmentation Generation (RAG) system.</value>
+    <value>Gestiona archivos dentro del sistema de Generación Aumentada por Recuperación (RAG).</value>
   </data>
   <data name="this.ModelListDropDown.Label" xml:space="preserve">
-    <value>Model List</value>
+    <value>Lista de modelos</value>
   </data>
   <data name="this.ModelListDropDown.SuperTip" xml:space="preserve">
-    <value>Select a language model for use in TextCraft.</value>
+    <value>Selecciona un modelo de lenguaje para usar en TextCraft.</value>
   </data>
   <data name="this.DefaultCheckBox.SuperTip" xml:space="preserve">
-    <value>Set the default language model for TextCraft.</value>
+    <value>Establece el modelo de lenguaje predeterminado para TextCraft.</value>
   </data>
   <data name="this.OptionsGroup.Label" xml:space="preserve">
-    <value>Options</value>
+    <value>Opciones</value>
   </data>
   <data name="this.InfoGroup.Label" xml:space="preserve">
-    <value>Info</value>
+    <value>Información</value>
   </data>
   <data name="(ThisAddIn.cs) [InitializeAddIn] ArgumentException #1" xml:space="preserve">
-    <value>Embed model missing. Please install it to proceed!</value>
+    <value>Cuadro de texto vacío. Escriba un texto para continuar.</value>
   </data>
   <data name="[WritingToolsGallery_ButtonClick] ArgumentOutOfRangeException #1" xml:space="preserve">
-    <value>Selected button not recognized.</value>
+    <value>Botón seleccionado no reconocido.</value>
   </data>
   <data name="[ReviewButton_Click] MessageBox #1 (text)" xml:space="preserve">
-    <value>Review complete! No comments needed for this document.</value>
+    <value>¡Revisión completa! No se necesitan comentarios para este documento.</value>
   </data>
   <data name="[ReviewButton_Click] MessageBox #1 (caption)" xml:space="preserve">
-    <value>Action Completed</value>
+    <value>Acción completada</value>
   </data>
   <data name="(ModelProperties.cs) [GetContextLength] OllamaMissingContextWindowException #1" xml:space="preserve">
-    <value>Unable to fetch the context length for {0}!</value>
+    <value>No se puede obtener la longitud del contexto para {0}!</value>
   </data>
   <data name="[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Text" xml:space="preserve">
-    <value>Do you want to allow TextCraft to access the following internet resource?</value>
+    <value>¿Desea permitir que TextCraft acceda al siguiente recurso de internet?</value>
   </data>
   <data name="[CommonUtils.cs] (GetInternetAccessPermission) MessageBox #1 Caption" xml:space="preserve">
-    <value>Internet Access</value>
+    <value>Acceso a Internet</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyMarkdownFormatting] ArgumentOutofRangeException #1" xml:space="preserve">
-    <value>Unknown format type for Markdown processing!</value>
+    <value>¡Tipo de formato desconocido para el procesamiento de Markdown!</value>
   </data>
   <data name="(WordMarkdown.cs) [GetCodeBlockAtIndex] ApplicationException #1" xml:space="preserve">
-    <value>Markdown code block not found at index {0}!</value>
+    <value>Bloque de código Markdown no encontrado en el índice {0}!</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyImageFormatting] ArgumentException #1" xml:space="preserve">
-    <value>Invalid URL format</value>
+    <value>Formato de URL no válido.</value>
   </data>
   <data name="(WordMarkdown.cs) [ApplyHeadingFormatting] ArgumentException #1" xml:space="preserve">
-    <value>Invalid Markdown heading: must contain 1 to 6 '#' characters.</value>
+    <value>Título de Markdown no válido: debe contener de 1 a 6 caracteres '#'.</value>
   </data>
   <data name="[AnalyzeText] InvalidRangeException #1" xml:space="preserve">
-    <value>No text selected for analysis!</value>
+    <value>¡No se ha seleccionado texto para el análisis!</value>
   </data>
 </root>

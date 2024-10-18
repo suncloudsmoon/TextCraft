@@ -31,24 +31,18 @@ namespace TextForge
         private HyperVectorDB.HyperVectorDB _db;
         private bool _isIndexing;
         private readonly object progressBarLock = new object();
-        
+        private static readonly CultureLocalizationHelper _cultureHelper = new CultureLocalizationHelper("TextForge.RAGControl", typeof(RAGControl).Assembly);
+
         public RAGControl()
         {
             try
             {
                 InitializeComponent();
-                _fileList = new BindingList<KeyValuePair<string, string>>();
-                FileListBox.DataSource = _fileList;
-                FileListBox.DisplayMember = "Key";  // Display the label (Key)
-                FileListBox.ValueMember = "Value";  // Internally use the filename (Value)
-
-                //_fileToolTip.AutomaticDelay = 500;
-                _fileToolTip.ShowAlways = true;     // Always show the tooltip
-
-                // Attach MouseMove event to FileListBox to display the full path in the tooltip
-                FileListBox.MouseMove += FileListBox_MouseMove;
-
-                _db = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
+                this.Load += (s, e) =>
+                {
+                    // Run the background task to initialize BindingList and FileListBox
+                    Task.Run(() => InitializeRAGControl());
+                };
             }
             catch (Exception ex)
             {
@@ -56,11 +50,32 @@ namespace TextForge
             }
         }
 
+        private void InitializeRAGControl()
+        {
+            FileListBox.Invoke(new Action(() =>
+            {
+                _fileList = new BindingList<KeyValuePair<string, string>>();
+                FileListBox.DataSource = _fileList;
+                FileListBox.DisplayMember = "Key";  // Display the label (Key)
+                FileListBox.ValueMember = "Value";  // Internally use the filename (Value)
+
+                _fileToolTip.ShowAlways = true;     // Always show the tooltip
+
+                // Attach MouseMove event to FileListBox to display the full path in the tooltip
+                FileListBox.MouseMove += FileListBox_MouseMove;
+            }));
+
+            lock (Forge.InitializeDoor)
+            {
+                _db = new HyperVectorDB.HyperVectorDB(ThisAddIn.Embedder, Path.GetTempPath());
+            }
+        }
+
         private async void AddButton_Click(object sender, EventArgs e)
         {
             try
             {
-                using (OpenFileDialog openFileDialog = new OpenFileDialog() { Title = "Select Files for RAG", Filter = "PDF files (*.pdf)|*.pdf", Multiselect = true })
+                using (OpenFileDialog openFileDialog = new OpenFileDialog() { Title = _cultureHelper.GetLocalizedString("[AddButton_Click] OpenFileDialog #1 Title"), Filter = "PDF files (*.pdf)|*.pdf", Multiselect = true })
                 {
                     List<string> filesToIndex = new List<string>();
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -309,7 +324,7 @@ namespace TextForge
                     }
                     else
                     {
-                        throw new InvalidDataException("Could not unlock PDF file due to incorrect password!");
+                        throw new InvalidDataException(_cultureHelper.GetLocalizedString("[ReadPdfFileAsync] InvalidDataException #1"));
                     }
                 }
                 return chunks;
@@ -346,7 +361,7 @@ namespace TextForge
                             }
                             else
                             {
-                                throw new InvalidDataException("Could not unlock PDF file due to incorrect password!");
+                                throw new InvalidDataException(_cultureHelper.GetLocalizedString("[ReadPdfFileAsync] InvalidDataException #1"));
                             }
                         }
                     }
@@ -391,7 +406,7 @@ namespace TextForge
                 document = RAGControl.GetWordDocumentAsRAG(lastUserPrompt.Content[0].Text, context);
 
             string ragQuery =
-                (constraints["rag_context"] == 0f) ? string.Empty : ThisAddIn.RagControl.GetRAGContext(lastUserPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * constraints["rag_context"]));
+                (constraints["rag_context"] == 0f) ? string.Empty : ThisAddIn.AllTaskPanes[Globals.ThisAddIn.Application.ActiveDocument].Item3.GetRAGContext(lastUserPrompt.Content[0].Text, (int)(ThisAddIn.ContextLength * constraints["rag_context"]));
 
             List<ChatMessage> chatHistory = new List<ChatMessage>()
             {
